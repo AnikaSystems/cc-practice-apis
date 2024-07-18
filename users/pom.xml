@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.anikasystems</groupId>
-	<artifactId>case-management-service</artifactId>
+	<artifactId>users-microservice</artifactId>
 	<version>0.0.1</version>
-	<name>case-management-service</name>
+	<name>users-microservice</name>
 	<description>Web API for Case Management System</description>
 
 	<properties>

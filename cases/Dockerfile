@@ -23,7 +23,7 @@ FROM amazoncorretto:17
 WORKDIR /app
 
 # Copy the JAR file from the previous stage to the runtime environment
-COPY --from=build */target/case-management-service-0.0.1.jar ./app.jar
+COPY --from=build */target/cases-microservice-0.0.1.jar ./app.jar
 
 # Specify the command to run the application
 CMD ["java", "-jar", "app.jar"]
