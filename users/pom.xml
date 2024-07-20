@@ -12,7 +12,7 @@
 	<artifactId>users-microservice</artifactId>
 	<version>0.0.1</version>
 	<name>users-microservice</name>
-	<description>Web API for Case Management System</description>
+	<description>Web API for Users Microservice</description>
 
 	<properties>
 		<java.version>17</java.version>

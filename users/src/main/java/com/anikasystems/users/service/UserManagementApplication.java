@@ -1,13 +1,13 @@
-package com.anikasystems.casemanagement.service;
+package com.anikasystems.users.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CaseManagementApplication {
+public class UserManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CaseManagementApplication.class, args);
+		SpringApplication.run(UserManagementApplication.class, args);
 	}
 
 }

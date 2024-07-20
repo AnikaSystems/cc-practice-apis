@@ -1,10 +1,10 @@
-package com.anikasystems.casemanagement.service;
+package com.anikasystems.users.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CaseManagementApplicationTests {
+class UserManagementApplicationTests {
 
 	@Test
 	void contextLoads() {
