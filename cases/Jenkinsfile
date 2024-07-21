@@ -15,7 +15,7 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 app = docker.build("cc-backend:${env.BUILD_NUMBER}", "-f /cases/Dockerfile .")
+                 app = docker.build("cc-backend:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
         }
