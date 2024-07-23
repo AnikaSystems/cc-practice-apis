@@ -30,13 +30,18 @@ pipeline {
                     -s './'
                     -f 'ALL' 
                     --prettyPrint''', odcInstallation: 'OWASP Dependency-Check'
+
                 dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             }
         }
         stage('Test (JUnit / Jacoco)'){
             steps {
-                script {
-                    echo "Run Unit Tests"
+                // Run Gradle tests
+                sh './gradlew clean test jacocoTestReport --no-daemon'
+            }
+            post {
+                always {
+                    junit 'build/test-results/**/*.xml'
                 }
             }
         }
@@ -46,6 +51,7 @@ pipeline {
                 script {
                     withSonarQubeEnv() {
                         echo "Run SonarQube Scanner"
+                        sh './gradlew sonar -Dsonar.verbose=true --info --stacktrace'
                     }
                 }
             }
