@@ -16,7 +16,7 @@ pipeline {
             steps { 
                 script{
                  sh '''   
-                 LISTCURRENT = `ls -la`
+                 LISTCURRENT=`ls -la`
                  echo $LISTCURRENT
                  '''
                  app = docker.build("cc-files:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
