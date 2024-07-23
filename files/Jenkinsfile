@@ -15,7 +15,10 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 ls -la
+                 sh '''   
+                 LISTCURRENT = `ls -la`
+                 echo $LISTCURRENT
+                 '''
                  app = docker.build("cc-files:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
