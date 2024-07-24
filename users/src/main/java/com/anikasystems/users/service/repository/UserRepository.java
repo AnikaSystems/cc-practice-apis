@@ -9,5 +9,5 @@ import com.anikasystems.users.service.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
   List<User> findByPublished(boolean published);
 
-  List<User> findByTitleContainingIgnoreUser(String title);
+  List<User> findByName(String Name);
 }

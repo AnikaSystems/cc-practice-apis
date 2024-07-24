@@ -31,14 +31,14 @@ public class UserController {
   UserRepository UserRepository;
 
   @GetMapping("/Users")
-  public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String title) {
+  public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String name) {
     try {
       List<User> Users = new ArrayList<User>();
 
-      if (title == null)
+      if (name == null)
         UserRepository.findAll().forEach(Users::add);
       else
-        UserRepository.findByTitleContainingIgnoreUser(title).forEach(Users::add);
+        UserRepository.findByName(name).forEach(Users::add);
 
       if (Users.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -84,7 +84,6 @@ public class UserController {
       User _User = UserData.get();
       _User.setName(inputUser.getName());
       _User.setAddress(inputUser.getAddress());
-      _User.setPublished(inputUser.isPublished());
       return new ResponseEntity<>(UserRepository.save(_User), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);

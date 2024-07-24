@@ -8,20 +8,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "users")
+@Table(name = "end_user")
 public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Column(name = "name")
+  @Column(name = "user_last_name")
   private String name;
 
-  @Column(name = "address")
+  @Column(name = "user_address")
   private String address;
 
-  @Column(name = "phoneNumber")
+  @Column(name = "user_phone")
   private String phoneNumber;
 
   @Column(name = "email")
