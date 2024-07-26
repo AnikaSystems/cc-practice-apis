@@ -91,6 +91,14 @@ public class Interpreter {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getIdDocPath() {
         return this.idDocPath;
     }
