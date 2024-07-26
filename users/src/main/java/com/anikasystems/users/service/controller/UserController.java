@@ -31,14 +31,14 @@ public class UserController {
   UserRepository UserRepository;
 
   @GetMapping("/Users")
-  public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String name) {
+  public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String lastName) {
     try {
       List<User> Users = new ArrayList<User>();
 
-      if (name == null)
+      if (lastName == null)
         UserRepository.findAll().forEach(Users::add);
       else
-        UserRepository.findByName(name).forEach(Users::add);
+        UserRepository.findByLastName(lastName).forEach(Users::add);
 
       if (Users.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -64,10 +64,11 @@ public class UserController {
   @PostMapping("/Users")
   public ResponseEntity<User> createUser(@RequestBody User UserData) {
     try {
-      User _User = UserRepository.save(new User(UserData.getName(), UserData.getAddress(), UserData.getPhoneNumber(), UserData.getEmail()));
+      //public User(long id, String password, String lastName, String firstName, String address, String phoneNumber, String email) {
+      User _User = UserRepository.save(new User(UserData.getId(), UserData.getPassword(), UserData.getLastName(), UserData.getFirstName(), UserData.getAddress(), UserData.getPhoneNumber(), UserData.getEmail()));
 
       SimpleQueue queue = new SimpleQueue("Users");
-      queue.send(UserData.getName());
+      queue.send(UserData.getLastName());
       queue.close();
 
       return new ResponseEntity<>(_User, HttpStatus.CREATED);
@@ -82,7 +83,8 @@ public class UserController {
 
     if (UserData.isPresent()) {
       User _User = UserData.get();
-      _User.setName(inputUser.getName());
+      _User.setFirstName(inputUser.getFirstName());
+      _User.setLastName(inputUser.getLastName());
       _User.setAddress(inputUser.getAddress());
       return new ResponseEntity<>(UserRepository.save(_User), HttpStatus.OK);
     } else {
@@ -110,19 +112,4 @@ public class UserController {
     }
 
   }
-
-  @GetMapping("/Users/published")
-  public ResponseEntity<List<User>> findByPublished() {
-    try {
-      List<User> Users = UserRepository.findByPublished(true);
-
-      if (Users.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
-      return new ResponseEntity<>(Users, HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
 }
