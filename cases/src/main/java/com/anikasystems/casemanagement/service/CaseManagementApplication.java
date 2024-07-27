@@ -20,15 +20,14 @@ public class CaseManagementApplication {
 	@EnableWebSecurity
 	@Configuration
 	static class OktaOAuth2WebSecurityConfiguration {
-
-	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		return http.authorizeHttpRequests(
-				(req) -> req.requestMatchers("/**").authenticated()
-			)
-			.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults()))
-  			.cors(Customizer.withDefaults())
-			.build();
-	}
+		@Bean
+		SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+			return http.authorizeHttpRequests(
+					(req) -> req.requestMatchers("/**").authenticated()
+				)
+				.oauth2ResourceServer((srv) -> srv.jwt(Customizer.withDefaults()))
+				.cors(Customizer.withDefaults())
+				.build();
+		}
 	}
 }
