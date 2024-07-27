@@ -12,6 +12,7 @@
 /build
 
 /.vs
+/.vscode
 
 # misc
 .DS_Store

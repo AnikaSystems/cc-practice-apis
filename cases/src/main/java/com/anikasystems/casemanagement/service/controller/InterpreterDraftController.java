@@ -19,81 +19,82 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anikasystems.casemanagement.service.model.Case;
-import com.anikasystems.casemanagement.service.repository.CaseRepository;
+import com.anikasystems.casemanagement.service.model.CaseInterpreterDraft;
+import com.anikasystems.casemanagement.service.repository.CaseInterpreterDraftRepository;
 import com.anikasystems.casemanagement.service.jms.SimpleQueue;
 
 @CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
 @RestController
-@RequestMapping("/api")
-public class CaseController {
+@RequestMapping("/api/drafts")
+public class InterpreterDraftController {
 
   @Autowired
-  CaseRepository caseRepository;
+  CaseInterpreterDraftRepository caseInterpreterDraftRepository;
 
-  @GetMapping("/cases")
-  public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String title) {
+  @GetMapping("/interpreter")
+  public ResponseEntity<List<CaseInterpreterDraft>> getAllCases(@RequestParam(required = false) String title) {
     try {
-      List<Case> cases = caseRepository.findAll();
+      List<CaseInterpreterDraft> drafts = caseInterpreterDraftRepository.findAll();
 
-      return new ResponseEntity<>(cases, HttpStatus.OK);
+      return new ResponseEntity<>(drafts, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @GetMapping("/cases/{id}")
-  public ResponseEntity<Case> getCaseById(@PathVariable("id") long id) {
-    Optional<Case> caseData = caseRepository.findById(id);
+  @GetMapping("/interpreter/{id}")
+  public ResponseEntity<CaseInterpreterDraft> getCaseById(@PathVariable("id") long id) {
+    Optional<CaseInterpreterDraft> draftData = caseInterpreterDraftRepository.findById(id);
 
-    if (caseData.isPresent()) {
-      return new ResponseEntity<>(caseData.get(), HttpStatus.OK);
+    if (draftData.isPresent()) {
+      return new ResponseEntity<>(draftData.get(), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
 
-  @PostMapping("/cases")
-  public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
+  @PostMapping("/interpreters")
+  public ResponseEntity<CaseInterpreterDraft> createCase(@RequestBody CaseInterpreterDraft draftData) {
     try {
-      Case _case = caseRepository.save(new Case(caseData.getSubjectId()));
+      CaseInterpreterDraft _draft = caseInterpreterDraftRepository.save(new CaseInterpreterDraft(Long.toString(draftData.getId())));
 
-      SimpleQueue queue = new SimpleQueue("cases");
-      queue.send((Long.toString(caseData.getId())));
+      SimpleQueue queue = new SimpleQueue("interpreterDrafts");
+      queue.send((Long.toString(draftData.getId())));
       queue.close();
 
-      return new ResponseEntity<>(_case, HttpStatus.CREATED);
+      return new ResponseEntity<>(_draft, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @PutMapping("/cases/{id}")
-  public ResponseEntity<Case> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
-    Optional<Case> caseData = caseRepository.findById(id);
+  @PutMapping("/interpreter/{id}")
+  public ResponseEntity<CaseInterpreterDraft> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
+    Optional<CaseInterpreterDraft> draftData = caseInterpreterDraftRepository.findById(id);
 
-    if (caseData.isPresent()) {
-      Case _case = caseData.get();
-      _case.setSubjectId(inputCase.getSubjectId());
-      return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
+    if (draftData.isPresent()) {
+      CaseInterpreterDraft _draft = draftData.get();
+      _draft.setSubjectId(inputCase.getSubjectId());
+      return new ResponseEntity<>(caseInterpreterDraftRepository.save(_draft), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
   }
 
-  @DeleteMapping("/cases/{id}")
+  @DeleteMapping("/interpreter/{id}")
   public ResponseEntity<HttpStatus> deleteCase(@PathVariable("id") long id) {
     try {
-      caseRepository.deleteById(id);
+      caseInterpreterDraftRepository.deleteById(id);
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  @DeleteMapping("/cases")
+  @DeleteMapping("/interpreter")
   public ResponseEntity<HttpStatus> deleteAllCases() {
     try {
-      caseRepository.deleteAll();
+      caseInterpreterDraftRepository.deleteAll();
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
