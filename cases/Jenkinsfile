@@ -43,7 +43,11 @@ pipeline {
                 script{
                     def BRANCH_NAME = scm.branches[0].name
                     def CLEAN_NAME = BRANCH_NAME.replaceAll("/","_")
-                    println("CLEAN_NAME=${CLEAN_NAME}") 
+                    println("CLEAN_NAME=${CLEAN_NAME}")
+                    println("env.BRANCH_NAME=${env.BRANCH_NAME}") 
+                    println("scmVars.GIT_BRANCH=${scmVars.GIT_BRANCH}") 
+                    println("scmVars.GIT_COMMIT=${scmVars.GIT_COMMIT}") 
+                    println("rev-short=${scmVars.GIT_COMMIT[0..6]}") 
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
                         app.push ("${CLEAN_NAME}")
