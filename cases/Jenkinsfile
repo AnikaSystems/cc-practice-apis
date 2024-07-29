@@ -41,10 +41,9 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def BRANCH_NAME = scm.branches[0].name
+                    def BRANCH_NAME = sh (script: 'git rev-parse --abbrev-ref HEAD', resturnStdout: true)
                     def CLEAN_NAME = BRANCH_NAME.replaceAll("/","_")
                     def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true)
-                    def actualBranch = sh (script: 'git branch', resturnStdout: true)
 
                     println("CLEAN_NAME=${CLEAN_NAME}")
                     println("commitHash=${commitHash}")
