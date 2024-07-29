@@ -44,7 +44,7 @@ pipeline {
                     def BRANCH_NAME = scm.branches[0].name
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push("${BRANCH_NAME}")
+                        app.push ("${BRANCH_NAME}".replaceAll("/","-"))
                         app.push("latest")
                     }
                 }
