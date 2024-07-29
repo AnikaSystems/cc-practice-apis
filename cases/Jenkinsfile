@@ -43,7 +43,9 @@ pipeline {
                 script{
                     def BRANCH_NAME = scm.branches[0].name
                     def CLEAN_NAME = BRANCH_NAME.replaceAll("/","_")
+                    def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true)
                     println("CLEAN_NAME=${CLEAN_NAME}")
+                    println("commitHash=${commitHash}")
                     println("env.BRANCH_NAME=${env.BRANCH_NAME}") 
                     println("scmVars.GIT_BRANCH=${scmVars.GIT_BRANCH}") 
                     println("scmVars.GIT_COMMIT=${scmVars.GIT_COMMIT}") 
