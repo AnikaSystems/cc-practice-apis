@@ -7,6 +7,8 @@ pipeline {
          stage('Clone repository') { 
             steps { 
                 script{
+                echo "scm : ${scmInfo}"
+                echo "${scmInfo.GIT_COMMIT}"
                 checkout scm
                 }
             }
@@ -44,6 +46,8 @@ pipeline {
                     def BRANCH_NAME = scm.branches[0].name
                     def CLEAN_NAME = BRANCH_NAME.replaceAll("/","_")
                     def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true)
+                    def actualBranch = sh (script: 'git branch', resturnStdout: true)
+
                     println("CLEAN_NAME=${CLEAN_NAME}")
                     println("commitHash=${commitHash}")
                     println("env.BRANCH_NAME=${env.BRANCH_NAME}") 
@@ -52,7 +56,8 @@ pipeline {
                     println("rev-short=${scmVars.GIT_COMMIT[0..6]}") 
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push ("${CLEAN_NAME}")
+                        app.push ("${actualBranch}")
+                        app.push("${commitHash}")
                         app.push("latest")
                     }
                 }
