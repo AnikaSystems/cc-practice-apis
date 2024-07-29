@@ -1,6 +1,10 @@
 package com.anikasystems.casemanagement.service.controller;
 
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +18,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
@@ -29,6 +36,38 @@ public class CaseController {
 
   @Autowired
   CaseRepository caseRepository;
+
+  @GetMapping("/profile-test")
+  public ResponseEntity<String> profileTest(@RequestHeader("Authorization") String bearer) {
+    String uriString = UriComponentsBuilder
+        .fromUriString(
+            "https://dev-32541404.okta.com/idp/myaccount/profile")
+        .build().toUriString();
+    try {
+      URL url = new URL(uriString);
+      HttpURLConnection con = (HttpURLConnection) url.openConnection();
+      // reuse the okta access token given to us (that should have the myaccount.profile.read scope)
+      con.setRequestProperty("Authorization", bearer);
+      // IMPORTANT - Accept header is required for okta myaccount apis
+      con.setRequestProperty("Accept", "application/json; okta-version=1.0.0");
+      con.setRequestMethod("GET");
+      BufferedReader in = new BufferedReader(
+        new InputStreamReader(con.getInputStream()));
+      String inputLine;
+      StringBuffer content = new StringBuffer();
+      while ((inputLine = in.readLine()) != null) {
+          content.append(inputLine);
+      }
+      in.close();
+      con.disconnect();
+      return new ResponseEntity<>(content.toString(), HttpStatus.OK);
+    } catch(Exception e) {
+      System.out.println(uriString);
+      System.out.println(bearer);
+      System.err.println(e.getMessage());
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   @GetMapping("/cases")
   public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String title) {
