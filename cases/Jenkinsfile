@@ -42,9 +42,11 @@ pipeline {
             steps {
                 script{
                     def BRANCH_NAME = scm.branches[0].name
+                    def CLEAN_NAME = BRANCH_NAME.replaceAll("/","_")
+                    println("CLEAN_NAME=${CLEAN_NAME}") 
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push ("${BRANCH_NAME}".replaceAll("/","-"))
+                        app.push ("${CLEAN_NAME}")
                         app.push("latest")
                     }
                 }
