@@ -61,20 +61,20 @@ public class CaseController {
     }
   }
 
-  @PostMapping("/cases")
-  public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
-    try {
-      Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
+  // @PostMapping("/cases")
+  // public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
+  //   try {
+  //     //Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
 
-      SimpleQueue queue = new SimpleQueue("cases");
-      queue.send(caseData.getTitle());
-      queue.close();
+  //     SimpleQueue queue = new SimpleQueue("cases");
+  //     //queue.send(caseData.getTitle());
+  //     queue.close();
 
-      return new ResponseEntity<>(_case, HttpStatus.CREATED);
-    } catch (Exception e) {
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+  //     //return new ResponseEntity<>(_case, HttpStatus.CREATED);
+  //   } catch (Exception e) {
+  //     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
 
   @PutMapping("/cases/{id}")
   public ResponseEntity<Case> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
@@ -82,9 +82,9 @@ public class CaseController {
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
-      _case.setTitle(inputCase.getTitle());
-      _case.setDescription(inputCase.getDescription());
-      _case.setPublished(inputCase.isPublished());
+      // _case.setTitle(inputCase.getTitle());
+      // _case.setDescription(inputCase.getDescription());
+      // _case.setPublished(inputCase.isPublished());
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);

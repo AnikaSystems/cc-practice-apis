@@ -10,4 +10,6 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
   List<Case> findByPublished(boolean published);
 
   List<Case> findByTitleContainingIgnoreCase(String title);
+
+  List<Case> findByCaseID(String ID);
 }
