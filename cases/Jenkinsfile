@@ -7,7 +7,9 @@ pipeline {
          stage('Clone repository') { 
             steps { 
                 script{
-                checkout scm
+                    def scmVars = checkout scm
+                    echo "GIT_COMMIT: ${scmVars.GIT_COMMIT}"
+                    echo "GIT_BRANCH: ${scmVars.GIT_BRANCH}"
                 }
             }
         }
@@ -41,10 +43,13 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def BRANCH_NAME = scm.branches[0].name
+                    def BRANCH_NAME = GIT_BRANCH.replaceAll("/","_")
+                    println("BRANCH_NAME=${BRANCH_NAME}")
+
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push("${BRANCH_NAME}")
+                        app.push ("${BRANCH_NAME}")
+                        app.push("${GIT_COMMIT}")
                         app.push("latest")
                     }
                 }
