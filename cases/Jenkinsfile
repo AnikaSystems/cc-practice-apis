@@ -43,19 +43,13 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def BRANCH_NAME = sh (script: 'git rev-parse --abbrev-ref HEAD')
+                    def BRANCH_NAME = GIT_BRANCH.replaceAll("/","_")
                     println("BRANCH_NAME=${BRANCH_NAME}")
-
-                    def CLEAN_NAME = BRANCH_NAME.replaceAll("/","_")
-                    println("CLEAN_NAME=${CLEAN_NAME}")
-
-                    def commitHash = sh(script: 'git rev-parse --short HEAD')
-                    println("commitHash=${commitHash}")
 
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push ("${CLEAN_NAME}")
-                        app.push("${commitHash}")
+                        app.push ("${BRANCH_NAME}")
+                        app.push("${GIT_COMMIT}")
                         app.push("latest")
                     }
                 }
