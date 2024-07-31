@@ -12,7 +12,13 @@ pipeline {
                 script{
                     def scmVars = checkout scm
                     echo "GIT_COMMIT: ${scmVars.GIT_COMMIT}"
-                    echo "GIT_BRANCH: ${scmVars.GIT_BRANCH}"
+                    echo "GIT_BRANCH_FULL: ${scmVars.GIT_BRANCH}"
+                    echo "GIT_BRANCH_LONG: ${scmVars.GIT_BRANCH.split('/')[1..-1].join('/')}"
+                    echo "GIT_BRANCH_SHORT: ${scmVars.GIT_BRANCH.split('/')[-1]}"
+
+                    println("GIT_BRANCH_FULL=${GIT_BRANCH_FULL}")
+                    println("GIT_BRANCH_LONG=${GIT_BRANCH_LONG}")
+                    println("GIT_BRANCH_SHORT=${GIT_BRANCH_SHORT}")
                 }
             }
         }
@@ -48,12 +54,9 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def BRANCH_NAME = GIT_BRANCH.split('/')[-1]
-                    println("BRANCH_NAME=${BRANCH_NAME}")
-
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push ("${BRANCH_NAME}")
+                        app.push ("${GIT_BRANCH_SHORT}")
                         app.push("${GIT_COMMIT}")
                         app.push("latest")
                     }
@@ -65,7 +68,7 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Image Scanner"
-                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output aquasec/trivy image -f json -o /output/case-image-scan-results.json cc-cases:${env.BUILD_NUMBER}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output aquasec/trivy image -f json -o /output/cc-cases-image-scan.json cc-cases:${env.BUILD_NUMBER}"
                 }
             }
         }
