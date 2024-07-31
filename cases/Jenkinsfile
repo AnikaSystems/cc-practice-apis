@@ -1,5 +1,8 @@
 pipeline {
     agent { label'ec2-agent' }
+    tools {
+        maven 'maven 3.9.6' // This is the name of the Maven installation configured in Jenkins
+    }
     options {
         skipStagesAfterUnstable()
     }
@@ -17,8 +20,8 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 sh './mvn dependency:go-offline'
-                 sh './mvn package'
+                 sh 'mvn dependency:go-offline'
+                 sh 'mvn package'
                  app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
