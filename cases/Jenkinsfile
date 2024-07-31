@@ -17,6 +17,8 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
+                 sh './mvn dependency:go-offline'
+                 sh './mvn package'
                  app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
@@ -60,8 +62,27 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Image Scanner"
-                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-cases:${env.BUILD_NUMBER}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image -f json -o /output/case-image-scan-results.json cc-cases:${env.BUILD_NUMBER}"
                 }
+            }
+        }
+
+        stage('archiving artifacts into AWS s3') {
+            steps {
+                script {
+                    def BRANCH_NAME = GIT_BRANCH.split('/')[-1]
+
+                    def s3path = "cc-practice-apis/case/${BRANCH_NAME}/${env.BUILD_NUMBER}/"
+                    echo "Pushing files to: ${s3path}"
+
+                    withAWS(region:env.DEPLOY_REGION,credentials:"aws-rapid-jenkins-user") {
+                        s3Delete(bucket:env.PIPELINE_BUCKET_NAME, path:s3path)
+                        s3Upload(bucket:env.PIPELINE_BUCKET_NAME, workingDir:'/scan-results/', path:s3path, includePathPattern:'**/*');
+                    }
+                    
+                }
+                
+                
             }
         }
 
