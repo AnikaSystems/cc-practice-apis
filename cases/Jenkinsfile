@@ -19,6 +19,7 @@ pipeline {
                     println("GIT_BRANCH_FULL=${GIT_BRANCH_FULL}")
                     println("GIT_BRANCH_LONG=${GIT_BRANCH_LONG}")
                     println("GIT_BRANCH_SHORT=${GIT_BRANCH_SHORT}")
+
                 }
             }
         }
