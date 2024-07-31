@@ -20,8 +20,8 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 sh 'mvn dependency:go-offline'
-                 sh 'mvn package'
+                 sh 'mvn -f cases/pom.xml dependency:go-offline'
+                 sh 'mvn -f cases/pom.xml package'
                  app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
