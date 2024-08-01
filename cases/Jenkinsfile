@@ -50,7 +50,7 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+                    def GIT_BRANCH_SHORT = GIT_BRANCH.split('/')[-1]
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
                         app.push ("${GIT_BRANCH_SHORT}")
@@ -73,7 +73,7 @@ pipeline {
         stage('archiving artifacts into AWS s3') {
             steps {
                 script {
-                    def GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+                    def GIT_BRANCH_SHORT = GIT_BRANCH.split('/')[-1]
                     def s3path = "cc-practice-apis/case/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
                     echo "Pushing files to: ${s3path}"
 
@@ -92,7 +92,7 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy GitHub Repo Scanner"
-                    def GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
+                    def GIT_BRANCH_LONG = GIT_BRANCH.split('/')[1..-1].join('/')
                     echo "Scanning on branch: ${GIT_BRANCH_LONG}"
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
                         sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
