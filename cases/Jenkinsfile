@@ -1,7 +1,7 @@
 pipeline {
     agent { label'ec2-agent' }
     tools {
-        maven 'maven 3.9.6' // This is the name of the Maven installation configured in Jenkins
+        maven 'maven 3.9.6'
     }
     options {
         skipStagesAfterUnstable()
