@@ -1,5 +1,8 @@
 pipeline {
     agent { label'ec2-agent' }
+    tools {
+        maven 'maven 3.9.6' // 3.9.6 is the current version of maven
+    }
     options {
         skipStagesAfterUnstable()
     }
@@ -9,7 +12,9 @@ pipeline {
                 script{
                     def scmVars = checkout scm
                     echo "GIT_COMMIT: ${scmVars.GIT_COMMIT}"
-                    echo "GIT_BRANCH: ${scmVars.GIT_BRANCH}"
+                    echo "GIT_BRANCH_FULL: ${scmVars.GIT_BRANCH}"
+                    echo "GIT_BRANCH_LONG: ${scmVars.GIT_BRANCH.split('/')[1..-1].join('/')}"
+                    echo "GIT_BRANCH_SHORT: ${scmVars.GIT_BRANCH.split('/')[-1]}"
                 }
             }
         }
@@ -17,6 +22,8 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
+                 sh 'mvn -f cases/pom.xml dependency:go-offline'
+                 sh 'mvn -f cases/pom.xml package'
                  app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
@@ -43,12 +50,10 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def BRANCH_NAME = GIT_BRANCH.split('/')[-1]
-                    println("BRANCH_NAME=${BRANCH_NAME}")
-
+                    def GIT_BRANCH_SHORT = GIT_BRANCH.split('/')[-1]
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push ("${BRANCH_NAME}")
+                        app.push ("${GIT_BRANCH_SHORT}")
                         app.push("${GIT_COMMIT}")
                         app.push("latest")
                     }
@@ -60,8 +65,26 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Image Scanner"
-                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-cases:${env.BUILD_NUMBER}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output aquasec/trivy image -f json -o /output/cc-cases-image-scan.json cc-cases:${env.BUILD_NUMBER}"
                 }
+            }
+        }
+
+        stage('archiving artifacts into AWS s3') {
+            steps {
+                script {
+                    def GIT_BRANCH_SHORT = GIT_BRANCH.split('/')[-1]
+                    def s3path = "cc-practice-apis/case/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
+                    echo "Pushing files to: ${s3path}"
+
+                    withAWS(region:env.DEPLOY_REGION,credentials:"aws-rapid-jenkins-user") {
+                        s3Delete(bucket:env.PIPELINE_BUCKET_NAME, path:s3path)
+                        s3Upload(bucket:env.PIPELINE_BUCKET_NAME, workingDir:'/scan-results/', path:s3path, includePathPattern:'**/*');
+                    }
+                    
+                }
+                
+                
             }
         }
 
@@ -69,10 +92,10 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy GitHub Repo Scanner"
-                    def BRANCH_NAME = GIT_BRANCH.split('/')[1..-1].join('/')
-                    echo "Scanning on branch: ${BRANCH_NAME}"
+                    def GIT_BRANCH_LONG = GIT_BRANCH.split('/')[1..-1].join('/')
+                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
-                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${BRANCH_NAME} --scanners secret"
+                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
                     }
                 }
             }
