@@ -1,7 +1,7 @@
 pipeline {
     agent { label'ec2-agent' }
     tools {
-        maven 'maven 3.9.6'
+        maven 'maven 3.9.6' // 3.9.6 is the current version of maven
     }
     options {
         skipStagesAfterUnstable()
