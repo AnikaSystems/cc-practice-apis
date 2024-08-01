@@ -1,5 +1,8 @@
 pipeline {
     agent { label'ec2-agent' }
+    environment{
+        NVDCREDS = credentials('nvdKey')
+    }
     options {
         skipStagesAfterUnstable()
     }
@@ -29,7 +32,7 @@ pipeline {
                     -o './'
                     -s './'
                     -f 'ALL' 
-                    --prettyPrint''', odcInstallation: 'OWASP Dependency-Check'
+                    --prettyPrint''', nvdCredentialsId: $NVDCREDS, odcInstallation: 'OWASP Dependency-Check'
 
                 dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             }
@@ -51,7 +54,7 @@ pipeline {
                 script {
                     withSonarQubeEnv() {
                         echo "Run SonarQube Scanner"
-                        sh './gradlew sonar -Dsonar.verbose=true --info --stacktrace'
+                        sh 'chmod +x ./gradlew ; ./gradlew sonar -Dsonar.verbose=true --info --stacktrace'
                     }
                 }
             }
