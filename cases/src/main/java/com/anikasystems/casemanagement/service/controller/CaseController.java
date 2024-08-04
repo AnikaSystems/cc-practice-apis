@@ -126,4 +126,9 @@ public class CaseController {
     }
   }
 
+  //This is a test API to make the input string uppercase
+  @GetMapping("/cases/uppercase/{title}")
+  public ResponseEntity<String> uppercaseString(@PathVariable("title") String string) {
+    return new ResponseEntity<>(string.toUpperCase(), HttpStatus.OK);
+  }
 }
