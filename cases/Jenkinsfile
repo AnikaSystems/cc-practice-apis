@@ -1,7 +1,7 @@
 pipeline {
     agent { label'ec2-agent' }
     tools {
-        maven 'maven 3.9.6' // 3.9.6 is the current version of maven
+        maven 'maven 3.9.6'
     }
     options {
         skipStagesAfterUnstable()
@@ -29,10 +29,11 @@ pipeline {
             }
         }
 
-        stage('Test (JUnit / Jacoco)'){
+        stage('Test'){
             steps {
                 script {
-                    echo "Run Unit Tests"
+                    sh 'mvn -f cases/pom.xml test'
+                    junit 'cases/target/surefire-reports/*.xml'
                 }
             }
         }
