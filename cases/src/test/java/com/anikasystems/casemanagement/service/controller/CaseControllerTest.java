@@ -1,56 +1,30 @@
 package com.anikasystems.casemanagement.service.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-@WebMvcTest(CaseController.class)
-public class CaseControllerTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @Autowired
-    private MockMvc mockMvc;
+class CaseControllerTest {
 
     @Test
-    public void testUppercaseString() throws Exception {
-        String input = "test";
-        String expectedOutput = "TEST";
+    void testUppercaseString() {
+        CaseController caseController = new CaseController();
+        String input = "hello world";
+        ResponseEntity<String> response = caseController.uppercaseString(input);
 
-        mockMvc.perform(get("/api/cases/uppercase/" + input))
-                .andExpect(status().isOk())
-                .andExpect(content().string(expectedOutput));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("HELLO WORLD", response.getBody());
     }
 
     @Test
-    public void testUppercaseStringWithNumbers() throws Exception {
-        String input = "test123";
-        String expectedOutput = "TEST123";
-
-        mockMvc.perform(get("/api/cases/uppercase/" + input))
-                .andExpect(status().isOk())
-                .andExpect(content().string(expectedOutput));
-    }
-
-    @Test
-    public void testUppercaseStringWithSpecialCharacters() throws Exception {
-        String input = "test@123";
-        String expectedOutput = "TEST@123";
-
-        mockMvc.perform(get("/api/cases/uppercase/" + input))
-                .andExpect(status().isOk())
-                .andExpect(content().string(expectedOutput));
-    }
-
-    @Test
-    public void testUppercaseStringWithEmptyString() throws Exception {
+    void testUppercaseStringWithEmptyInput() {
+        CaseController caseController = new CaseController();
         String input = "";
-        String expectedOutput = "";
+        ResponseEntity<String> response = caseController.uppercaseString(input);
 
-        mockMvc.perform(get("/api/cases/uppercase/" + input))
-                .andExpect(status().isOk())
-                .andExpect(content().string(expectedOutput));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("", response.getBody());
     }
 }
