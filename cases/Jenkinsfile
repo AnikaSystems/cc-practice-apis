@@ -32,7 +32,9 @@ pipeline {
         stage('Test (JUnit / Jacoco)'){
             steps {
                 script {
-                    echo "Run Unit Tests"
+                    sh 'mvn -f cases/pom.xml test'
+                    junit 'cases/target/surefire-reports/*.xml'
+                    jacoco(execPattern: 'cases/target/jacoco.exec')
                 }
             }
         }
