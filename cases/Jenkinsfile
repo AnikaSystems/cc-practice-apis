@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Test (JUnit / Jacoco)'){
+        stage('Test'){
             steps {
                 script {
                     sh 'mvn -f cases/pom.xml test'
