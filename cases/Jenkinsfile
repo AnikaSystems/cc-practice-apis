@@ -12,10 +12,12 @@ pipeline {
                 script{
                     def scmVars = checkout scm
                     GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
+                    GIT_DESC = scmVars.GIT_DESC
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
+                    echo "GIT_DESC: ${GIT_DESC}"
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
@@ -26,9 +28,11 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 sh 'mvn -f cases/pom.xml dependency:go-offline'
-                 sh 'mvn -f cases/pom.xml package'
-                 app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
+                    currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"GIT_COMMIT"+"-"+"${GIT_BRANCH_SHORT}"
+                    currentBuild.description = "${GIT_DESC}"
+                    sh 'mvn -f cases/pom.xml dependency:go-offline'
+                    sh 'mvn -f cases/pom.xml package'
+                    app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
         }
