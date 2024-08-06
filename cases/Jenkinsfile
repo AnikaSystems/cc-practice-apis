@@ -11,12 +11,13 @@ pipeline {
             steps { 
                 script{
                     def scmVars = checkout scm
+                    println(scmVars)
                     GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
                     GIT_COMMIT_MSG = scmVars.GIT_COMMIT_MSG
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
-                    GIT_COMMITTER_NAME = scmVars.GIT_COMMITTER_NAME
+                    GIT_COMMITTER_NAME = scmVars.GIT_COMMITTER_NAME != null ? scmVars.GIT_COMMITTER_NAME : scmVars.GIT_AUTHOR_NAME != null ? 
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
                     echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
                     echo "GIT_COMMITTER_NAME: ${GIT_COMMITTER_NAME}"
