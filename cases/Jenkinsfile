@@ -11,10 +11,10 @@ pipeline {
             steps { 
                 script{
                     def scmVars = checkout scm
-                    def GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
-                    def GIT_BRANCH_FULL = scmVars.GIT_BRANCH
-                    def GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
-                    def GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+                    GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
+                    GIT_BRANCH_FULL = scmVars.GIT_BRANCH
+                    GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
+                    GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
