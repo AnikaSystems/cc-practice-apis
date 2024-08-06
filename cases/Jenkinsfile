@@ -10,7 +10,7 @@ pipeline {
          stage('Clone repository') { 
             steps { 
                 script{
-                    def scmVars = checkout 
+                    def scmVars = checkout scm
                     def GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
                     def GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     def GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
