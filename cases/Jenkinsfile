@@ -17,7 +17,7 @@ pipeline {
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
-                    GIT_COMMITTER_NAME = scmVars.GIT_COMMITTER_NAME != null ? scmVars.GIT_COMMITTER_NAME : scmVars.GIT_AUTHOR_NAME != null ? 
+                    GIT_AUTHOR_COMMITTER = scmVars.GIT_COMMITTER_NAME?.trim() ? scmVars.GIT_COMMITTER_NAME.trim() : scmVars.GIT_AUTHOR_NAME?.trim() ? scmVars.GIT_AUTHOR_NAME.trim() : "No Name extracted"
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
                     echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
                     echo "GIT_COMMITTER_NAME: ${GIT_COMMITTER_NAME}"
@@ -32,7 +32,7 @@ pipeline {
             steps { 
                 script{
                     currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
-                    currentBuild.description = "Updated by "+"${GIT_COMMITTER_NAME}"
+                    currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
                     sh 'mvn -f cases/pom.xml dependency:go-offline'
                     sh 'mvn -f cases/pom.xml package'
                     app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
