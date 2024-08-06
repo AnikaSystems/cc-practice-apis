@@ -11,10 +11,16 @@ pipeline {
             steps { 
                 script{
                     def scmVars = checkout scm
-                    echo "GIT_COMMIT: ${scmVars.GIT_COMMIT}"
-                    echo "GIT_BRANCH_FULL: ${scmVars.GIT_BRANCH}"
-                    echo "GIT_BRANCH_LONG: ${scmVars.GIT_BRANCH.split('/')[1..-1].join('/')}"
-                    echo "GIT_BRANCH_SHORT: ${scmVars.GIT_BRANCH.split('/')[-1]}"
+                    GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
+                    GIT_COMMIT_MSG = scmVars.GIT_COMMIT_MSG
+                    GIT_BRANCH_FULL = scmVars.GIT_BRANCH
+                    GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
+                    GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+                    echo "GIT_COMMIT: ${GIT_COMMIT}"
+                    echo "GIT_COMMITTER_NAME: ${GIT_COMMITTER_NAME}"
+                    echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
+                    echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
+                    echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
                 }
             }
         }
@@ -22,9 +28,11 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 sh 'mvn -f cases/pom.xml dependency:go-offline'
-                 sh 'mvn -f cases/pom.xml package'
-                 app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
+                    currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
+                    currentBuild.description = "Updated by "+"${GIT_COMMITTER_NAME}"
+                    sh 'mvn -f cases/pom.xml dependency:go-offline'
+                    sh 'mvn -f cases/pom.xml package'
+                    app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
         }
@@ -51,7 +59,6 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def GIT_BRANCH_SHORT = GIT_BRANCH.split('/')[-1]
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
                         app.push ("${GIT_BRANCH_SHORT}")
@@ -74,7 +81,6 @@ pipeline {
         stage('archiving artifacts into AWS s3') {
             steps {
                 script {
-                    def GIT_BRANCH_SHORT = GIT_BRANCH.split('/')[-1]
                     def s3path = "cc-practice-apis/case/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
                     echo "Pushing files to: ${s3path}"
 
@@ -93,7 +99,6 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy GitHub Repo Scanner"
-                    def GIT_BRANCH_LONG = GIT_BRANCH.split('/')[1..-1].join('/')
                     echo "Scanning on branch: ${GIT_BRANCH_LONG}"
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
                         sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
