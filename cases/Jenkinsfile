@@ -18,7 +18,7 @@ pipeline {
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
 
-                    changeLogSets = currentBuild.changeSets
+                    def changeLogSets = currentBuild.changeSets // Exclude from serialization
                     GIT_AUTHOR_COMMITTER = ""
                     GIT_COMMIT_MSG = ""
                     for (changeLogSet in changeLogSets) {
