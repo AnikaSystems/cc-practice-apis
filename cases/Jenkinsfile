@@ -18,7 +18,12 @@ pipeline {
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
 
-                    def changeLogSets = currentBuild.changeSets // Exclude from serialization
+                    @NonCPS
+                    def getChangeLogSets() {
+                        return currentBuild.changeSets
+                    }
+                    
+                    def changeLogSets = getChangeLogSets()
                     GIT_AUTHOR_COMMITTER = ""
                     GIT_COMMIT_MSG = ""
                     for (changeLogSet in changeLogSets) {
@@ -28,7 +33,7 @@ pipeline {
                             GIT_COMMIT_MSG = entry.msg
                         }
                     }
-
+                    
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
                     echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
                     echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
