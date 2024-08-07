@@ -17,16 +17,10 @@ pipeline {
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
-
-                    @NonCPS
-                    def getChangeLogSets() {
-                        return currentBuild.changeSets
-                    }
                     
-                    def changeLogSets = getChangeLogSets()
                     GIT_AUTHOR_COMMITTER = ""
                     GIT_COMMIT_MSG = ""
-                    for (changeLogSet in changeLogSets) {
+                    for (changeLogSet in currentBuild.changeSets) {
                         for (entry in changeLogSet.items) {
                             // Get details from the latest entry
                             GIT_AUTHOR_COMMITTER = entry.author
