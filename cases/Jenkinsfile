@@ -24,8 +24,8 @@ pipeline {
                     for (changeLogSet in changeLogSets) {
                         for (entry in changeLogSet.items) {
                             // Get details from the latest entry
-                            GIT_AUTHOR_COMMITTER = latestEntry.author
-                            GIT_COMMIT_MSG = latestEntry.msg
+                            GIT_AUTHOR_COMMITTER = entry.author
+                            GIT_COMMIT_MSG = entry.msg
                         }
                     }
 
