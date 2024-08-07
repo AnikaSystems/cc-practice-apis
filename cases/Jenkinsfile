@@ -25,9 +25,7 @@ pipeline {
                         def latestChangeSet = changeLogSets[changeLogSets.size() - 1]
                         if (latestChangeSet.items.size() > 0) {
                             def latestEntry = latestChangeSet.items[latestChangeSet.items.size() - 1]
-                            GIT_AUTHOR_COMMITTER = latestEntry.author.fullName
-                            println(latestEntry)
-                            println(latestEntry.author)
+                            GIT_AUTHOR_COMMITTER = latestEntry.author
                             GIT_COMMIT_MSG = latestEntry.msg
                         }
                     }
