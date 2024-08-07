@@ -31,8 +31,8 @@ pipeline {
                     }
 
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
-                    echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
-                    echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
+                    //echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
+                    //echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
