@@ -19,8 +19,8 @@ pipeline {
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
 
                     changeLogSets = currentBuild.changeSets
-                    GIT_AUTHOR_COMMITTER = ""
-                    GIT_COMMIT_MSG = ""
+                    def GIT_AUTHOR_COMMITTER = ""
+                    def GIT_COMMIT_MSG = ""
                     if (changeLogSets.size() > 0) {
                         def latestChangeSet = changeLogSets[changeLogSets.size() - 1]
                         if (latestChangeSet.items.size() > 0) {
