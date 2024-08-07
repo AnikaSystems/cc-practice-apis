@@ -16,8 +16,20 @@ pipeline {
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+                    
+                    GIT_AUTHOR_COMMITTER = ""
+                    GIT_COMMIT_MSG = ""
+                    for (changeLogSet in currentBuild.changeSets) {
+                        for (entry in changeLogSet.items) {
+                            // Get details from the latest entry
+                            GIT_AUTHOR_COMMITTER = entry.author.toString()
+                            GIT_COMMIT_MSG = entry.msg.toString()
+                        }
+                    }
+                    
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
-                    echo "GIT_COMMITTER_NAME: ${GIT_COMMITTER_NAME}"
+                    echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
+                    echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
@@ -29,7 +41,7 @@ pipeline {
             steps { 
                 script{
                     currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
-                    currentBuild.description = "Updated by "+"${GIT_COMMITTER_NAME}"
+                    currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
                     sh 'mvn -f cases/pom.xml dependency:go-offline'
                     sh 'mvn -f cases/pom.xml package'
                     app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
