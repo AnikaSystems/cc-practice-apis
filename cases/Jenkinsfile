@@ -23,8 +23,8 @@ pipeline {
                     for (changeLogSet in currentBuild.changeSets) {
                         for (entry in changeLogSet.items) {
                             // Get details from the latest entry
-                            GIT_AUTHOR_COMMITTER = entry.author
-                            GIT_COMMIT_MSG = entry.msg
+                            GIT_AUTHOR_COMMITTER = entry.author.toString()
+                            GIT_COMMIT_MSG = entry.msg.toString()
                         }
                     }
                     
