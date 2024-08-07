@@ -21,18 +21,17 @@ pipeline {
                     changeLogSets = currentBuild.changeSets
                     GIT_AUTHOR_COMMITTER = ""
                     GIT_COMMIT_MSG = ""
-                    if (changeLogSets.size() > 0) {
-                        def latestChangeSet = changeLogSets[changeLogSets.size() - 1]
-                        if (latestChangeSet.items.size() > 0) {
-                            def latestEntry = latestChangeSet.items[latestChangeSet.items.size() - 1]
+                    for (changeLogSet in changeLogSets) {
+                        for (entry in changeLogSet.items) {
+                            // Get details from the latest entry
                             GIT_AUTHOR_COMMITTER = latestEntry.author
                             GIT_COMMIT_MSG = latestEntry.msg
                         }
                     }
 
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
-                    //echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
-                    //echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
+                    echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
+                    echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
