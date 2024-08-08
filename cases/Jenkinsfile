@@ -7,8 +7,8 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-         stage('Clone repository') { 
-            steps { 
+        stage('Clone repository') {
+            steps {
                 script{
                     def scmVars = checkout scm
                     GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
