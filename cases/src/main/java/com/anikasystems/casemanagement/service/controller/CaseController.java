@@ -38,7 +38,7 @@ public class CaseController {
       if (title == null)
         caseRepository.findAll().forEach(cases::add);
       else
-        caseRepository.findByTitleContainingIgnoreCase(title).forEach(cases::add);
+        // caseRepository.findByTitleContainingIgnoreCase(title).forEach(cases::add);
 
       if (cases.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -61,20 +61,31 @@ public class CaseController {
     }
   }
 
-  // @PostMapping("/cases")
-  // public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
-  //   try {
-  //     //Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
+  // @GetMapping("/cases/{id}")
+  // public ResponseEntity<Case> getCaseStatusById(@PathVariable("id") long id) {
+  //   Optional<Case> caseData = caseRepository.findById(id);
 
-  //     SimpleQueue queue = new SimpleQueue("cases");
-  //     //queue.send(caseData.getTitle());
-  //     queue.close();
-
-  //     //return new ResponseEntity<>(_case, HttpStatus.CREATED);
-  //   } catch (Exception e) {
-  //     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+  //   if (caseData.isPresent()) {
+  //     return new ResponseEntity<>(caseData.get(), HttpStatus.OK);
+  //   } else {
+  //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   //   }
   // }
+
+  @PostMapping("/cases")
+  public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
+    try {
+      //Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
+
+      SimpleQueue queue = new SimpleQueue("cases");
+      //queue.send(caseData.getTitle());
+      queue.close();
+      Case _case = caseData;
+      return new ResponseEntity<>(_case, HttpStatus.CREATED);
+    } catch (Exception e) {
+      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   @PutMapping("/cases/{id}")
   public ResponseEntity<Case> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
@@ -82,9 +93,7 @@ public class CaseController {
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
-      // _case.setTitle(inputCase.getTitle());
-      // _case.setDescription(inputCase.getDescription());
-      // _case.setPublished(inputCase.isPublished());
+  
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -112,18 +121,6 @@ public class CaseController {
 
   }
 
-  @GetMapping("/cases/published")
-  public ResponseEntity<List<Case>> findByPublished() {
-    try {
-      List<Case> cases = caseRepository.findByPublished(true);
 
-      if (cases.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
-      return new ResponseEntity<>(cases, HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
 
 }
