@@ -8,5 +8,5 @@ import com.anikasystems.casemanagement.service.model.Case;
 
 public interface CaseRepository extends JpaRepository<Case, Long> {
 
-  List<Case> findBycase_id(String ID);
+  //List<Case> findBycase_id(String ID);
 }
