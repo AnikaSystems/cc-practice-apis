@@ -13,7 +13,7 @@ import jakarta.jms.TextMessage;
 
 public class SimpleQueue {
 
-	private static final String CLIENTID = "UserManagement";
+	//private static final String CLIENTID = "UserManagement";
 	private String queueName;
 	private ActiveMQConnectionFactory connectionFactory;
 	private Connection connection;
