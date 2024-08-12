@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.anikasystems.casemanagement.service.model.Case;
 
 public interface CaseRepository extends JpaRepository<Case, Long> {
-  List<Case> findByUpdated(Date date);
 
   List<Case> findByCaseID(String ID);
 }
