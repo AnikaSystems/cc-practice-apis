@@ -1,10 +1,10 @@
-package com.anikasystems.casemanagement.service.model;
+package com.anikasystems.files.service.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cases")
-public class Case {
+@Table(name = "File")
+public class File {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,14 +19,20 @@ public class Case {
   @Column(name = "published")
   private boolean published;
 
-  public Case() {
+  @Column(name = "applicant")
+  private String applicant;
 
-  }
+  @Column(name = "interpreter")
+  private String interpreter;
 
-  public Case(String title, String description, boolean published) {
+  public File() {}
+
+  public File(String title, String description, boolean published, String applicant, String interpreter) {
     this.title = title;
     this.description = description;
     this.published = published;
+    this.applicant = applicant;
+    this.interpreter = interpreter;
   }
 
   public long getId() {
@@ -55,6 +61,22 @@ public class Case {
 
   public void setPublished(boolean isPublished) {
     this.published = isPublished;
+  }
+
+  public String getApplicant() {
+    return applicant;
+  }
+
+  public void setApplicant(String applicant) {
+    this.applicant = applicant;
+  }
+
+  public String getInterpreter() {
+    return interpreter;
+  }
+
+  public void setInterpreter(String interpreter) {
+    this.interpreter = interpreter;
   }
 
   @Override
