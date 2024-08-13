@@ -38,7 +38,7 @@ public class CaseController {
       if (title == null)
         caseRepository.findAll().forEach(cases::add);
       else
-        caseRepository.findByTitleContainingIgnoreCase(title).forEach(cases::add);
+        // caseRepository.findByTitleContainingIgnoreCase(title).forEach(cases::add);
 
       if (cases.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -64,12 +64,12 @@ public class CaseController {
   @PostMapping("/cases")
   public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
     try {
-      Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
+      //Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
 
       SimpleQueue queue = new SimpleQueue("cases");
-      queue.send(caseData.getTitle());
+      //queue.send(caseData.getTitle());
       queue.close();
-
+      Case _case = caseData;
       return new ResponseEntity<>(_case, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -82,9 +82,7 @@ public class CaseController {
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
-      _case.setTitle(inputCase.getTitle());
-      _case.setDescription(inputCase.getDescription());
-      _case.setPublished(inputCase.isPublished());
+  
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -112,18 +110,10 @@ public class CaseController {
 
   }
 
-  @GetMapping("/cases/published")
-  public ResponseEntity<List<Case>> findByPublished() {
-    try {
-      List<Case> cases = caseRepository.findByPublished(true);
-
-      if (cases.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
-      return new ResponseEntity<>(cases, HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  //This is a test API to make the input string uppercase
+  @GetMapping("/cases/uppercase/{title}")
+  public ResponseEntity<String> uppercaseString(@PathVariable("title") String string) {
+    return new ResponseEntity<>(string.toUpperCase(), HttpStatus.OK);
   }
 
 }
