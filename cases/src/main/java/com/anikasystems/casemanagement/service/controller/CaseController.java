@@ -61,17 +61,6 @@ public class CaseController {
     }
   }
 
-  // @GetMapping("/cases/{id}")
-  // public ResponseEntity<Case> getCaseStatusById(@PathVariable("id") long id) {
-  //   Optional<Case> caseData = caseRepository.findById(id);
-
-  //   if (caseData.isPresent()) {
-  //     return new ResponseEntity<>(caseData.get(), HttpStatus.OK);
-  //   } else {
-  //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-  //   }
-  // }
-
   @PostMapping("/cases")
   public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
     try {
@@ -121,11 +110,10 @@ public class CaseController {
 
   }
 
-
-
   //This is a test API to make the input string uppercase
   @GetMapping("/cases/uppercase/{title}")
   public ResponseEntity<String> uppercaseString(@PathVariable("title") String string) {
     return new ResponseEntity<>(string.toUpperCase(), HttpStatus.OK);
   }
+
 }

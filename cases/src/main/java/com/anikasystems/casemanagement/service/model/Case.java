@@ -1,3 +1,4 @@
+
 package com.anikasystems.casemanagement.service.model;
 
 import java.sql.Date;
