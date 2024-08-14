@@ -1,13 +1,38 @@
 pipeline {
     agent { label'ec2-agent' }
+    tools {
+        maven 'maven 3.9.6'
+    }
     options {
         skipStagesAfterUnstable()
     }
     stages {
-         stage('Clone repository') { 
-            steps { 
+        stage('Clone repository') {
+            steps {
                 script{
-                checkout scm
+                    def scmVars = checkout scm
+                    GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
+                    GIT_COMMIT_MSG = scmVars.GIT_COMMIT_MSG
+                    GIT_BRANCH_FULL = scmVars.GIT_BRANCH
+                    GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
+                    GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+                    
+                    GIT_AUTHOR_COMMITTER = ""
+                    GIT_COMMIT_MSG = ""
+                    for (changeLogSet in currentBuild.changeSets) {
+                        for (entry in changeLogSet.items) {
+                            // Get details from the latest entry
+                            GIT_AUTHOR_COMMITTER = entry.author.toString()
+                            GIT_COMMIT_MSG = entry.msg.toString()
+                        }
+                    }
+                    
+                    echo "GIT_COMMIT: ${GIT_COMMIT}"
+                    echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
+                    echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
+                    echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
+                    echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
+                    echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
                 }
             }
         }
@@ -15,15 +40,20 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 app = docker.build("cc-files:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
+                    currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
+                    currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
+                    sh 'mvn -f files/pom.xml dependency:go-offline'
+                    sh 'mvn -f files/pom.xml package'
+                    app = docker.build("cc-files:${env.BUILD_NUMBER}", "-f files/Dockerfile .")
                 }
             }
         }
 
-        stage('Test (JUnit / Jacoco)'){
+        stage('Test'){
             steps {
                 script {
-                    echo "Run Unit Tests"
+                    sh 'mvn -f files/pom.xml test'
+                    junit 'files/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -41,10 +71,10 @@ pipeline {
         stage('Deploy to ECR') {
             steps {
                 script{
-                    def BRANCH_NAME = scm.branches[0].name
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
-                        app.push("${BRANCH_NAME}")
+                        app.push ("${GIT_BRANCH_SHORT}")
+                        app.push("${GIT_COMMIT}")
                         app.push("latest")
                     }
                 }
@@ -55,8 +85,25 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Image Scanner"
-                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image cc-files:${env.BUILD_NUMBER}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output aquasec/trivy image -f json -o /output/cc-files-image-scan.json cc-files:${env.BUILD_NUMBER}"
                 }
+            }
+        }
+
+        stage('archiving artifacts into AWS s3') {
+            steps {
+                script {
+                    def s3path = "cc-practice-apis/file/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
+                    echo "Pushing files to: ${s3path}"
+
+                    withAWS(region:env.DEPLOY_REGION,credentials:"aws-rapid-jenkins-user") {
+                        s3Delete(bucket:env.PIPELINE_BUCKET_NAME, path:s3path)
+                        s3Upload(bucket:env.PIPELINE_BUCKET_NAME, workingDir:'/scan-results/', path:s3path, includePathPattern:'**/*');
+                    }
+                    
+                }
+                
+                
             }
         }
 
@@ -64,10 +111,9 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy GitHub Repo Scanner"
-                    def BRANCH_NAME = scm.branches[0].name
-                    echo "Scanning on branch: ${BRANCH_NAME}"
+                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
-                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${BRANCH_NAME} --scanners secret"
+                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
                     }
                 }
             }
