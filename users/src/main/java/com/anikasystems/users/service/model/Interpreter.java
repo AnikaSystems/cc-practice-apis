@@ -130,6 +130,4 @@ public class Interpreter {
             ", idDocFileId='" + getIdDocFileId() + "'" +
             "}";
     }
-
-
 }

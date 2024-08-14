@@ -5,13 +5,13 @@ FROM maven:3.9.6-amazoncorretto-17 AS build
 WORKDIR /app
 
 # Copy the pom.xml file to the container
-COPY pom.xml .
+COPY cases/pom.xml .
 
 # Download dependencies and build the project
 RUN mvn dependency:go-offline
 
 # Copy the source code to the container
-COPY src ./src
+COPY cases/src ./src
 
 # Build the application
 RUN mvn package

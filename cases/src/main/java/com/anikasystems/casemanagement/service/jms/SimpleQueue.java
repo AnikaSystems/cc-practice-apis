@@ -1,3 +1,4 @@
+
 package com.anikasystems.casemanagement.service.jms;
 
 import jakarta.jms.*;
@@ -5,7 +6,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class SimpleQueue {
 
-	private static final String CLIENTID = "CaseManagement";
+	//private static final String CLIENTID = "CaseManagement";
 	private String queueName;
 	private ActiveMQConnectionFactory connectionFactory;
 	private Connection connection;

@@ -1,3 +1,4 @@
+
 package com.anikasystems.users.service.model;
 
 import java.util.Objects;

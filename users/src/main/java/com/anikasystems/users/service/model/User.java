@@ -1,3 +1,4 @@
+
 package com.anikasystems.users.service.model;
 
 import jakarta.persistence.Column;
@@ -49,6 +50,7 @@ public class User {
     this.phoneNumber = phoneNumber;
     this.email = email;
   }
+
 
 
   public long getId() {
@@ -119,6 +121,9 @@ public class User {
   public String toString() {
     return "{" +
       " id='" + getId() + "'" +
+      ", password='" + getPassword() + "'" +
+      ", lastName='" + getLastName() + "'" +
+      ", firstName='" + getFirstName() + "'" +
       ", password='" + getPassword() + "'" +
       ", lastName='" + getLastName() + "'" +
       ", firstName='" + getFirstName() + "'" +
