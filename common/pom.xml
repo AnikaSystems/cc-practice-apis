@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.anikasystems</groupId>
-	<artifactId>case-management-service</artifactId>
+	<artifactId>common</artifactId>
 	<version>0.0.1</version>
-	<name>case-management-service</name>
-	<description>Web API for Case Management System</description>
+	<name>common</name>
+	<description>Common files needed accross all services</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -23,27 +23,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-
-		<dependency> 
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-activemq</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -53,7 +41,48 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-jar-to-users</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+							<sourceFile>target/common-0.0.1.jar</sourceFile>
+							<destinationFile>../users/src/main/resources/common-0.0.1.jar</destinationFile>
+						</configuration>
+                    </execution>
+					<execution>
+                        <id>copy-jar-to-cases</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+							<sourceFile>target/common-0.0.1.jar</sourceFile>
+							<destinationFile>../cases/src/main/resources/common-0.0.1.jar</destinationFile>
+						</configuration>
+                    </execution>
+					<execution>
+                        <id>copy-jar-to-files</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+							<sourceFile>target/common-0.0.1.jar</sourceFile>
+							<destinationFile>../files/src/main/resources/common-0.0.1.jar</destinationFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
+
 
 </project>
