@@ -1,6 +1,7 @@
 package com.anikasystems.files.service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,4 +80,23 @@ public class FileUploadController {
         }
     }
 
+    //hit the following URL via postman
+    // HTTP GETcall
+    // http://localhost:9091/actuator
+    // and you will get all the actuator responses back from the API.
+    // check the health info
+    @PutMapping("/actuator/health")
+    public Health health() {
+        int errorCode = check(); // perform some specific health check
+        if (errorCode != 0) {
+            return Health.down()
+              .withDetail("Error Code", errorCode).build();
+        }
+        return Health.up().build();
+    }
+    
+    public int check() {
+    	// Our logic to check health
+    	return 0;
+    }
 }
