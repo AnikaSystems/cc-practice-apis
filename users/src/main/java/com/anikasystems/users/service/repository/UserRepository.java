@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   List<User> findByPublished(boolean published);
 
   List<User> findByTitleContainingIgnoreUser(String title);
+
+  List<User> findByLastName(String lastName);
 }
