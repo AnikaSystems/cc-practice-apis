@@ -40,8 +40,7 @@ public class Interpreter {
         // TODO Auto-generated method stub
     }
 
-    public Interpreter(long id, String lastName, String firstName, String address, String phoneNumber, String email, String idDocPath, String idDocFileId) {
-        this.id = id;
+    public Interpreter(String lastName, String firstName, String address, String phoneNumber, String email, String idDocPath, String idDocFileId) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.address = address;

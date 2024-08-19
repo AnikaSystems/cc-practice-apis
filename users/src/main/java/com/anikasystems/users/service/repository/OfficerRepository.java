@@ -11,5 +11,7 @@ public interface OfficerRepository extends JpaRepository<Officer, Long> {
 
   Optional<Officer> findById(long id);
 
+  Optional<Officer> findByEmail(String email);
+
   List<Officer> findByLastName(String lastName);
 }

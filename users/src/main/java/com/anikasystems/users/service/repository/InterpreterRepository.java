@@ -11,5 +11,7 @@ public interface InterpreterRepository extends JpaRepository<Interpreter, Long> 
 
   Optional<Interpreter> findById(long id);
 
+  Optional<Interpreter> findByEmail(String email);
+
   List<Interpreter> findByLastName(String lastName);
 }
