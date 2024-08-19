@@ -107,4 +107,9 @@ public class UserController {
     }
 
   }
+
+  @RequestMapping("/Users/health")
+  public ResponseEntity<HttpStatus> health() {
+    return new ResponseEntity<>(HttpStatus.OK); 
+  }
 }
