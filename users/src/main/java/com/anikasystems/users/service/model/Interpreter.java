@@ -40,12 +40,12 @@ public class Interpreter {
         // TODO Auto-generated method stub
     }
 
-    public Interpreter(long id, String lastName, String firstName, String address, String phoneNumber, String idDocPath, String idDocFileId) {
-        this.id = id;
+    public Interpreter(String lastName, String firstName, String address, String phoneNumber, String email, String idDocPath, String idDocFileId) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.address = address;
         this.phoneNumber = phoneNumber;
+        this.email = email;
         this.idDocPath = idDocPath;
         this.idDocFileId = idDocFileId;
     }
@@ -124,10 +124,9 @@ public class Interpreter {
             ", firstName='" + getFirstName() + "'" +
             ", address='" + getAddress() + "'" +
             ", phoneNumber='" + getPhoneNumber() + "'" +
+            ", email='" + getEmail() + "'" +
             ", idDocPath='" + getIdDocPath() + "'" +
             ", idDocFileId='" + getIdDocFileId() + "'" +
             "}";
     }
-
-
 }
