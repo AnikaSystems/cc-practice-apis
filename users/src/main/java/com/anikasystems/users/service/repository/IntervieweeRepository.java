@@ -1,4 +1,3 @@
-
 package com.anikasystems.users.service.repository;
 
 import java.util.List;
@@ -11,6 +10,8 @@ import com.anikasystems.users.service.model.Interviewee;
 public interface IntervieweeRepository extends JpaRepository<Interviewee, Long> {
 
   Optional<Interviewee> findById(long id);
+
+  Optional<Interviewee> findByEmail(String email);
 
   List<Interviewee> findByLastName(String lastName);
 }

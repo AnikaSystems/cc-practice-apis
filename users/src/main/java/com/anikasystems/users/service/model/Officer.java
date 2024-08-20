@@ -49,8 +49,7 @@ public class Officer {
   public Officer() {
   }
 
-  public Officer(long id, String lastName, String firstName, boolean isSupervisor, String phoneNumber, String email, String fieldOffice, String signature, String signaturePath, String sigFileId) {
-    this.id = id;
+  public Officer(String lastName, String firstName, boolean isSupervisor, String phoneNumber, String email, String fieldOffice, String signature, String signaturePath, String sigFileId) {
     this.lastName = lastName;
     this.firstName = firstName;
     this.isSupervisor = isSupervisor;

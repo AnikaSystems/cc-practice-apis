@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anikasystems.users.service.jms.SimpleQueue;
 import com.anikasystems.users.service.model.User;
 import com.anikasystems.users.service.repository.UserRepository;
 
@@ -65,12 +64,7 @@ public class UserController {
   @PostMapping("/Users")
   public ResponseEntity<User> createUser(@RequestBody User UserData) {
     try {
-      //public User(long id, String password, String lastName, String firstName, String address, String phoneNumber, String email) {
-      User _User = UserRepository.save(new User(UserData.getId(), UserData.getPassword(), UserData.getLastName(), UserData.getFirstName(), UserData.getAddress(), UserData.getPhoneNumber(), UserData.getEmail()));
-
-      SimpleQueue queue = new SimpleQueue("Users");
-      queue.send(UserData.getLastName());
-      queue.close();
+      User _User = UserRepository.save(UserData);
 
       return new ResponseEntity<>(_User, HttpStatus.CREATED);
     } catch (Exception e) {
@@ -112,5 +106,10 @@ public class UserController {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+  }
+
+  @RequestMapping("/Users/health")
+  public ResponseEntity<HttpStatus> health() {
+    return new ResponseEntity<>(HttpStatus.OK); 
   }
 }

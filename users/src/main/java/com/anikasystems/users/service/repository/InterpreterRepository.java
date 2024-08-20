@@ -1,4 +1,3 @@
-
 package com.anikasystems.users.service.repository;
 
 import java.util.List;
@@ -11,6 +10,8 @@ import com.anikasystems.users.service.model.Interpreter;
 public interface InterpreterRepository extends JpaRepository<Interpreter, Long> {
 
   Optional<Interpreter> findById(long id);
+
+  Optional<Interpreter> findByEmail(String email);
 
   List<Interpreter> findByLastName(String lastName);
 }
