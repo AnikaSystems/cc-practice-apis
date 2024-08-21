@@ -17,13 +17,14 @@ import java.net.URL;
 import com.anikasystems.files.service.service.S3FileUploadService;
  
 @RestController
+@Cross
 @RequestMapping("/api")
 public class FileUploadController {
  
     @Autowired
     private S3FileUploadService s3FileUploadService;
  
-    @PostMapping("/upload")
+    @PostMapping("/file/upload")
     public String uploadFile(@RequestParam("id") long id, @RequestParam("file") MultipartFile file) {
         try {
             s3FileUploadService.uploadFile(id, file.getOriginalFilename(), file);
@@ -33,14 +34,14 @@ public class FileUploadController {
         }
     }
 
-    @PutMapping("/upload")
+    @PutMapping("/file/upload")
     public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant, @RequestParam("interpreter") String interpreter) {
         
         s3FileUploadService.updateFile(id, applicant, interpreter);
         
     }
 
-    @PutMapping("/download")
+    @PutMapping("/file/download")
     public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath) throws IOException{
         
         s3FileUploadService.downloadFile(url, localPath);
@@ -48,7 +49,7 @@ public class FileUploadController {
     }
     
     @SuppressWarnings("null")
-    @GetMapping("/profile-test")
+    @GetMapping("/file/profile-test")
     public ResponseEntity<String> profileTest(@RequestHeader("Authorization") String bearer) {
         String uriString = UriComponentsBuilder
             .fromUriString(
@@ -85,7 +86,7 @@ public class FileUploadController {
     // http://localhost:9091/actuator
     // and you will get all the actuator responses back from the API.
     // check the health info
-    @PutMapping("/actuator/health")
+    @PutMapping("/file/actuator/health")
     public Health health() {
         int errorCode = check(); // perform some specific health check
         if (errorCode != 0) {
