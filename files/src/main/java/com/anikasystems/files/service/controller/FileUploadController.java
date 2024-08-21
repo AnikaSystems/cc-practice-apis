@@ -17,7 +17,7 @@ import java.net.URL;
 import com.anikasystems.files.service.service.S3FileUploadService;
  
 @RestController
-@Cross
+@CrossOrigin
 @RequestMapping("/api")
 public class FileUploadController {
  
