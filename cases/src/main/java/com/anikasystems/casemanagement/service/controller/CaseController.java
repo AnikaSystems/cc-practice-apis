@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
 
-@CrossOrigin(origins = {"https://cc-case-management.s3.amazonaws.com","https://7juyht0nz7.execute-api.us-east-1.amazonaws.com/"})
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class CaseController {
