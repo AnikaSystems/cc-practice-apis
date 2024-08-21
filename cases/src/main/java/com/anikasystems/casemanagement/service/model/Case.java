@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cases")
+@Table(name = "iterp_iview_case")
 public class Case {
 
   @Id
