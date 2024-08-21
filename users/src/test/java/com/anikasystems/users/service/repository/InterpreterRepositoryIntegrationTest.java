@@ -26,7 +26,7 @@ public class InterpreterRepositoryIntegrationTest {
     @Order(1)
     public void givennewInterpreter_whenSaved_thenSuccess() {
         //testing the "C" in CRUD
-        Interpreter newInterpreter = new Interpreter("lastName", "firstName", "address", "phoneNumber", testEmail, "idDocPath", "idDocFileId");
+        Interpreter newInterpreter = new Interpreter("lastName", "firstName", "address", "phoneNumber", testEmail, "languages", "idDocPath", "idDocFileId");
         InterpreterRepository.save(newInterpreter);
         assert(entityManager.find(Interpreter.class, newInterpreter.getId()).equals(newInterpreter));    
     }

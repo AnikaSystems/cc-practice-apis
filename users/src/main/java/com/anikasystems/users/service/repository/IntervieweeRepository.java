@@ -13,5 +13,7 @@ public interface IntervieweeRepository extends JpaRepository<Interviewee, Long> 
 
   Optional<Interviewee> findByEmail(String email);
 
+  Optional<Interviewee> findByAlienRegNumber(String alienRegNumber);
+
   List<Interviewee> findByLastName(String lastName);
 }
