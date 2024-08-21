@@ -1,4 +1,3 @@
-
 package com.anikasystems.casemanagement.service.model;
 
 import java.sql.Date;
@@ -10,620 +9,620 @@ import jakarta.persistence.*;
 @Table(name = "iterp_iview_case")
 public class Case {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
 
-  @Column(name = "case_id")
-  private int case_id;
+    @Column(name = "case_id")
+    private int caseId;
 
-  @Column(name = "user_id_fk")
-  private int user_id_fk;
+    @Column(name = "user_id_fk")
+    private int userIdFk;
 
-  @Column(name = "cm_id_fk")
-  private int cm_id_fk;
+    @Column(name = "cm_id_fk")
+    private int cmIdFk;
 
-  @Column(name = "subject_id_fk")
-  private int subject_id_fk;
+    @Column(name = "subject_id_fk")
+    private int subjectIdFk;
 
-  @Column(name = "interpreter_id_fk")
-  private int interpreter_id_fk;
+    @Column(name = "interpreter_id_fk")
+    private int interpreterIdFk;
 
-  @Column(name = "interp_id_doc_attach")
-  private boolean interp_id_doc_attach;
+    @Column(name = "interp_id_doc_attach")
+    private boolean interpIdDocAttach;
 
-  @Column(name = "subject_declare_sig")
-  private String subject_declare_sig;
+    @Column(name = "subject_declare_sig")
+    private String subjectDeclareSig;
 
-  @Column(name = "subject_dec_sig_doc_path")
-  private String subject_dec_sig_doc_path;
+    @Column(name = "subject_dec_sig_doc_path")
+    private String subjectDecSigDocPath;
 
-  @Column(name = "subject_dec_sig_doc_file_id")
-  private String subject_dec_sig_doc_file_id;
+    @Column(name = "subject_dec_sig_doc_file_id")
+    private String subjectDecSigDocFileId;
 
-  @Column(name = "interp_declare_sig")
-  private String interp_declare_sig;
+    @Column(name = "interp_declare_sig")
+    private String interpDeclareSig;
 
-  @Column(name = "interp_dec_sig_doc_path")
-  private String interp_dec_sig_doc_path;
+    @Column(name = "interp_dec_sig_doc_path")
+    private String interpDecSigDocPath;
 
-  @Column(name = "interp_dec_sig_doc_file_id")
-  private String interp_dec_sig_doc_file_id;
+    @Column(name = "interp_dec_sig_doc_file_id")
+    private String interpDecSigDocFileId;
 
-  @Column(name = "interp_declare")
-  private Date interp_declare;
+    @Column(name = "interp_declare")
+    private Date interpDeclare;
 
-  @Column(name = "officer_id_fk")
-  private int officer_id_fk;
+    @Column(name = "officer_id_fk")
+    private int officerIdFk;
 
-  @Column(name = "officer_declare")
-  private Date officer_declare;
+    @Column(name = "officer_declare")
+    private Date officerDeclare;
 
-  @Column(name = "officer_declare_sig")
-  private String officer_declare_sig;
+    @Column(name = "officer_declare_sig")
+    private String officerDeclareSig;
 
-  @Column(name = "officer_dec_sig_doc_path")
-  private String officer_dec_sig_doc_path;
+    @Column(name = "officer_dec_sig_doc_path")
+    private String officerDecSigDocPath;
 
-  @Column(name = "officer_dec_sig_doc_file_id")
-  private String officer_dec_sig_doc_file_id;
+    @Column(name = "officer_dec_sig_doc_file_id")
+    private String officerDecSigDocFileId;
 
-  @Column(name = "officer_declare_entered_name")
-  private String officer_declare_entered_name;
+    @Column(name = "officer_declare_entered_name")
+    private String officerDeclareEnteredName;
 
-  @Column(name = "officer_field_office")
-  private String officer_field_office;
+    @Column(name = "officer_field_office")
+    private String officerFieldOffice;
 
-  @Column(name = "update_date")
-  private Date update_date;
+    @Column(name = "update_date")
+    private Date updateDate;
 
-  @Column(name = "interp_dq")
-  private boolean interp_dq;
+    @Column(name = "interp_dq")
+    private boolean interpDq;
 
-  @Column(name = "interp_dq_reason")
-  private String interp_dq_reason;
+    @Column(name = "interp_dq_reason")
+    private String interpDqReason;
 
-  @Column(name = "subject_dq_name")
-  private String subject_dq_name;
+    @Column(name = "subject_dq_name")
+    private String subjectDqName;
 
-  @Column(name = "dq_reschedule")
-  private boolean dq_reschedule;
+    @Column(name = "dq_reschedule")
+    private boolean dqReschedule;
 
-  @Column(name = "officer_dq_sig")
-  private String officer_dq_sig;
+    @Column(name = "officer_dq_sig")
+    private String officerDqSig;
 
-  @Column(name = "officer_dq_sig_doc_path")
-  private String officer_dq_sig_doc_path;
+    @Column(name = "officer_dq_sig_doc_path")
+    private String officerDqSigDocPath;
 
-  @Column(name = "officer_dq_sig_doc_file_id")
-  private String officer_dq_sig_doc_file_id;
+    @Column(name = "officer_dq_sig_doc_file_id")
+    private String officerDqSigDocFileId;
 
-  @Column(name = "officer_dq_entered_name")
-  private String officer_dq_entered_name;
+    @Column(name = "officer_dq_entered_name")
+    private String officerDqEnteredName;
 
-  @Column(name = "superv_dq_sig")
-  private String superv_dq_sig;
+    @Column(name = "superv_dq_sig")
+    private String supervDqSig;
 
-  @Column(name = "superv_dq_sig_doc_path")
-  private String superv_dq_sig_doc_path;
-
-  @Column(name = "superv_dq_sig_doc_file_id")
-  private String superv_dq_sig_doc_file_id;
-
-  @Column(name = "superv_dq_entered_name")
-  private String superv_dq_entered_name;
-
-  @Column(name = "continue_wo_interpreter")
-  private Boolean continue_wo_interpreter;
-
-  @Column(name = "officer_wd_sig")
-  private String officer_wd_sig;
-
-  @Column(name = "officer_wd_sig_doc_path")
-  private String officer_wd_sig_doc_path;
-
-  @Column(name = "officer_wd_sig_doc_file_id")
-  private String officer_wd_sig_doc_file_id;
-
-  @Column(name = "officer_wd_entered_name")
-  private String officer_wd_entered_name;
-
-  @Column(name = "subject_wd_sig")
-  private String subject_wd_sig;
-
-  @Column(name = "subject_wd_sig_doc_path")
-  private String subject_wd_sig_doc_path;
-
-  @Column(name = "subject_wd_sig_doc_file_id")
-  private String subject_wd_sig_doc_file_id;
-
-  @Column(name = "subject_wd_entered_name")
-  private String subject_wd_entered_name;
-
-  @Column(name = "case_status_code")
-  private Integer case_status_code;
-
-  @Column(name = "case_status_value")
-  private String case_status_value;
-
-  @Column(name = "case_update_date")
-  private LocalDateTime case_update_date;
-
-  public Case() {
-
-  }
-
-  public Case(int case_id, int user_id_fk, int cm_id_fk,
-      int subject_id_fk, int interpreter_id_fk, boolean interp_id_doc_attach, String subject_declare_sig,
-      String subject_dec_sig_doc_path,
-      String subject_dec_sig_doc_file_id, String interp_declare_sig, String interp_dec_sig_doc_path,
-      String interp_dec_sig_doc_file_id,
-      Date interp_declare, int officer_id_fk, Date officer_declare, String officer_declare_sig,
-      String officer_dec_sig_doc_path, String officer_dec_sig_doc_file_id,
-      String officer_declare_entered_name, String officer_field_office, Date update_date, boolean interp_dq,
-      String interp_dq_reason, String subject_dq_name, boolean dq_reschedule,
-      String officer_dq_sig, String officer_dq_sig_doc_path, String officer_dq_sig_doc_file_id,
-      String officer_dq_entered_name, String superv_dq_sig, String superv_dq_sig_doc_path,
-      String superv_dq_sig_doc_file_id, String superv_dq_entered_name, Boolean continue_wo_interpreter,
-      String officer_wd_sig, String officer_wd_sig_doc_path, String officer_wd_sig_doc_file_id,
-      String officer_wd_entered_name, String subject_wd_sig, String subject_wd_sig_doc_path,
-      String subject_wd_sig_doc_file_id, String subject_wd_entered_name, Integer case_status_code,
-      String case_status_value, LocalDateTime case_update_date) {
-    this.case_id = case_id;
-    this.user_id_fk = user_id_fk;
-    this.cm_id_fk = cm_id_fk;
-    this.subject_id_fk = subject_id_fk;
-    this.interpreter_id_fk = interpreter_id_fk;
-    this.interp_id_doc_attach = interp_id_doc_attach;
-    this.subject_declare_sig = subject_declare_sig;
-    this.subject_dec_sig_doc_path = subject_dec_sig_doc_path;
-    this.subject_dec_sig_doc_file_id = subject_dec_sig_doc_file_id;
-    this.interp_declare_sig = interp_declare_sig;
-    this.interp_dec_sig_doc_path = interp_dec_sig_doc_path;
-    this.interp_dec_sig_doc_file_id = interp_dec_sig_doc_file_id;
-    this.interp_declare = interp_declare;
-    this.officer_id_fk = officer_id_fk;
-    this.officer_declare = officer_declare;
-    this.officer_declare_sig = officer_declare_sig;
-    this.officer_dec_sig_doc_path = officer_dec_sig_doc_path;
-    this.officer_dec_sig_doc_file_id = officer_dec_sig_doc_file_id;
-    this.officer_declare_entered_name = officer_declare_entered_name;
-    this.officer_field_office = officer_field_office;
-    this.update_date = update_date;
-    this.interp_dq = interp_dq;
-    this.interp_dq_reason = interp_dq_reason;
-    this.subject_dq_name = subject_dq_name;
-    this.dq_reschedule = dq_reschedule;
-    this.officer_dq_sig = officer_dq_sig;
-    this.officer_dq_sig_doc_path = officer_dq_sig_doc_path;
-    this.officer_dq_sig_doc_file_id = officer_dq_sig_doc_file_id;
-    this.officer_dq_entered_name = officer_dq_entered_name;
-    this.superv_dq_sig = superv_dq_sig;
-    this.superv_dq_sig_doc_path = superv_dq_sig_doc_path;
-    this.superv_dq_sig_doc_file_id = superv_dq_sig_doc_file_id;
-    this.superv_dq_entered_name = superv_dq_entered_name;
-    this.continue_wo_interpreter = continue_wo_interpreter;
-    this.officer_wd_sig = officer_wd_sig;
-    this.officer_wd_sig_doc_path = officer_wd_sig_doc_path;
-    this.officer_wd_sig_doc_file_id = officer_wd_sig_doc_file_id;
-    this.officer_wd_entered_name = officer_wd_entered_name;
-    this.subject_wd_sig = subject_wd_sig;
-    this.subject_wd_sig_doc_path = subject_wd_sig_doc_path;
-    this.subject_wd_sig_doc_file_id = subject_wd_sig_doc_file_id;
-    this.subject_wd_entered_name = subject_wd_entered_name;
-    this.case_status_code = case_status_code;
-    this.case_status_value = case_status_value;
-    this.case_update_date = case_update_date;
-  }
-
-  public int getCase_id() {
-    return case_id;
-}
-
-public void setCase_id(int case_id) {
-    this.case_id = case_id;
-}
-
-public int getUser_id_fk() {
-    return user_id_fk;
-}
-
-public void setUser_id_fk(int user_id_fk) {
-    this.user_id_fk = user_id_fk;
-}
-
-public int getCm_id_fk() {
-    return cm_id_fk;
-}
-
-public void setCm_id_fk(int cm_id_fk) {
-    this.cm_id_fk = cm_id_fk;
-}
-
-public int getSubject_id_fk() {
-    return subject_id_fk;
-}
-
-public void setSubject_id_fk(int subject_id_fk) {
-    this.subject_id_fk = subject_id_fk;
-}
-
-public int getInterpreter_id_fk() {
-    return interpreter_id_fk;
-}
-
-public void setInterpreter_id_fk(int interpreter_id_fk) {
-    this.interpreter_id_fk = interpreter_id_fk;
-}
-
-public boolean isInterp_id_doc_attach() {
-    return interp_id_doc_attach;
-}
-
-public void setInterp_id_doc_attach(boolean interp_id_doc_attach) {
-    this.interp_id_doc_attach = interp_id_doc_attach;
-}
-
-public String getSubject_declare_sig() {
-    return subject_declare_sig;
-}
-
-public void setSubject_declare_sig(String subject_declare_sig) {
-    this.subject_declare_sig = subject_declare_sig;
-}
-
-public String getSubject_dec_sig_doc_path() {
-    return subject_dec_sig_doc_path;
-}
-
-public void setSubject_dec_sig_doc_path(String subject_dec_sig_doc_path) {
-    this.subject_dec_sig_doc_path = subject_dec_sig_doc_path;
-}
-
-public String getSubject_dec_sig_doc_file_id() {
-    return subject_dec_sig_doc_file_id;
-}
-
-public void setSubject_dec_sig_doc_file_id(String subject_dec_sig_doc_file_id) {
-    this.subject_dec_sig_doc_file_id = subject_dec_sig_doc_file_id;
-}
-
-public String getInterp_declare_sig() {
-    return interp_declare_sig;
-}
-
-public void setInterp_declare_sig(String interp_declare_sig) {
-    this.interp_declare_sig = interp_declare_sig;
-}
-
-public String getInterp_dec_sig_doc_path() {
-    return interp_dec_sig_doc_path;
-}
-
-public void setInterp_dec_sig_doc_path(String interp_dec_sig_doc_path) {
-    this.interp_dec_sig_doc_path = interp_dec_sig_doc_path;
-}
-
-public String getInterp_dec_sig_doc_file_id() {
-    return interp_dec_sig_doc_file_id;
-}
-
-public void setInterp_dec_sig_doc_file_id(String interp_dec_sig_doc_file_id) {
-    this.interp_dec_sig_doc_file_id = interp_dec_sig_doc_file_id;
-}
-
-public Date getInterp_declare() {
-    return interp_declare;
-}
-
-public void setInterp_declare(Date interp_declare) {
-    this.interp_declare = interp_declare;
-}
-
-public int getOfficer_id_fk() {
-    return officer_id_fk;
-}
-
-public void setOfficer_id_fk(int officer_id_fk) {
-    this.officer_id_fk = officer_id_fk;
-}
-
-public Date getOfficer_declare() {
-    return officer_declare;
-}
-
-public void setOfficer_declare(Date officer_declare) {
-    this.officer_declare = officer_declare;
-}
-
-public String getOfficer_declare_sig() {
-    return officer_declare_sig;
-}
-
-public void setOfficer_declare_sig(String officer_declare_sig) {
-    this.officer_declare_sig = officer_declare_sig;
-}
-
-public String getOfficer_dec_sig_doc_path() {
-    return officer_dec_sig_doc_path;
-}
-
-public void setOfficer_dec_sig_doc_path(String officer_dec_sig_doc_path) {
-    this.officer_dec_sig_doc_path = officer_dec_sig_doc_path;
-}
-
-public String getOfficer_dec_sig_doc_file_id() {
-    return officer_dec_sig_doc_file_id;
-}
-
-public void setOfficer_dec_sig_doc_file_id(String officer_dec_sig_doc_file_id) {
-    this.officer_dec_sig_doc_file_id = officer_dec_sig_doc_file_id;
-}
-
-public String getOfficer_declare_entered_name() {
-    return officer_declare_entered_name;
-}
-
-public void setOfficer_declare_entered_name(String officer_declare_entered_name) {
-    this.officer_declare_entered_name = officer_declare_entered_name;
-}
-
-public String getOfficer_field_office() {
-    return officer_field_office;
-}
-
-public void setOfficer_field_office(String officer_field_office) {
-    this.officer_field_office = officer_field_office;
-}
-
-public Date getUpdate_date() {
-    return update_date;
-}
-
-public void setUpdate_date(Date update_date) {
-    this.update_date = update_date;
-}
-
-public boolean isInterp_dq() {
-    return interp_dq;
-}
-
-public void setInterp_dq(boolean interp_dq) {
-    this.interp_dq = interp_dq;
-}
-
-public String getInterp_dq_reason() {
-    return interp_dq_reason;
-}
-
-public void setInterp_dq_reason(String interp_dq_reason) {
-    this.interp_dq_reason = interp_dq_reason;
-}
-
-public String getSubject_dq_name() {
-    return subject_dq_name;
-}
-
-public void setSubject_dq_name(String subject_dq_name) {
-    this.subject_dq_name = subject_dq_name;
-}
-
-public boolean isDq_reschedule() {
-    return dq_reschedule;
-}
-
-public void setDq_reschedule(boolean dq_reschedule) {
-    this.dq_reschedule = dq_reschedule;
-}
-
-public String getOfficer_dq_sig() {
-    return officer_dq_sig;
-}
-
-public void setOfficer_dq_sig(String officer_dq_sig) {
-    this.officer_dq_sig = officer_dq_sig;
-}
-
-public String getOfficer_dq_sig_doc_path() {
-    return officer_dq_sig_doc_path;
-}
-
-public void setOfficer_dq_sig_doc_path(String officer_dq_sig_doc_path) {
-    this.officer_dq_sig_doc_path = officer_dq_sig_doc_path;
-}
-
-public String getOfficer_dq_sig_doc_file_id() {
-    return officer_dq_sig_doc_file_id;
-}
-
-public void setOfficer_dq_sig_doc_file_id(String officer_dq_sig_doc_file_id) {
-    this.officer_dq_sig_doc_file_id = officer_dq_sig_doc_file_id;
-}
-
-public String getOfficer_dq_entered_name() {
-    return officer_dq_entered_name;
-}
-
-public void setOfficer_dq_entered_name(String officer_dq_entered_name) {
-    this.officer_dq_entered_name = officer_dq_entered_name;
-}
-
-public String getSuperv_dq_sig() {
-    return superv_dq_sig;
-}
-
-public void setSuperv_dq_sig(String superv_dq_sig) {
-    this.superv_dq_sig = superv_dq_sig;
-}
-
-public String getSuperv_dq_sig_doc_path() {
-    return superv_dq_sig_doc_path;
-}
-
-public void setSuperv_dq_sig_doc_path(String superv_dq_sig_doc_path) {
-    this.superv_dq_sig_doc_path = superv_dq_sig_doc_path;
-}
-
-public String getSuperv_dq_sig_doc_file_id() {
-    return superv_dq_sig_doc_file_id;
-}
-
-public void setSuperv_dq_sig_doc_file_id(String superv_dq_sig_doc_file_id) {
-    this.superv_dq_sig_doc_file_id = superv_dq_sig_doc_file_id;
-}
-
-public String getSuperv_dq_entered_name() {
-    return superv_dq_entered_name;
-}
-
-public void setSuperv_dq_entered_name(String superv_dq_entered_name) {
-    this.superv_dq_entered_name = superv_dq_entered_name;
-}
-
-public Boolean getContinue_wo_interpreter() {
-    return continue_wo_interpreter;
-}
-
-public void setContinue_wo_interpreter(Boolean continue_wo_interpreter) {
-    this.continue_wo_interpreter = continue_wo_interpreter;
-}
-
-public String getOfficer_wd_sig() {
-    return officer_wd_sig;
-}
-
-public void setOfficer_wd_sig(String officer_wd_sig) {
-    this.officer_wd_sig = officer_wd_sig;
-}
-
-public String getOfficer_wd_sig_doc_path() {
-    return officer_wd_sig_doc_path;
-}
-
-public void setOfficer_wd_sig_doc_path(String officer_wd_sig_doc_path) {
-    this.officer_wd_sig_doc_path = officer_wd_sig_doc_path;
-}
-
-public String getOfficer_wd_sig_doc_file_id() {
-    return officer_wd_sig_doc_file_id;
-}
-
-public void setOfficer_wd_sig_doc_file_id(String officer_wd_sig_doc_file_id) {
-    this.officer_wd_sig_doc_file_id = officer_wd_sig_doc_file_id;
-}
-
-public String getOfficer_wd_entered_name() {
-    return officer_wd_entered_name;
-}
-
-public void setOfficer_wd_entered_name(String officer_wd_entered_name) {
-    this.officer_wd_entered_name = officer_wd_entered_name;
-}
-
-public String getSubject_wd_sig() {
-    return subject_wd_sig;
-}
-
-public void setSubject_wd_sig(String subject_wd_sig) {
-    this.subject_wd_sig = subject_wd_sig;
-}
-
-public String getSubject_wd_sig_doc_path() {
-    return subject_wd_sig_doc_path;
-}
-
-public void setSubject_wd_sig_doc_path(String subject_wd_sig_doc_path) {
-    this.subject_wd_sig_doc_path = subject_wd_sig_doc_path;
-}
-
-public String getSubject_wd_sig_doc_file_id() {
-    return subject_wd_sig_doc_file_id;
-}
-
-public void setSubject_wd_sig_doc_file_id(String subject_wd_sig_doc_file_id) {
-    this.subject_wd_sig_doc_file_id = subject_wd_sig_doc_file_id;
-}
-
-public String getSubject_wd_entered_name() {
-    return subject_wd_entered_name;
-}
-
-public void setSubject_wd_entered_name(String subject_wd_entered_name) {
-    this.subject_wd_entered_name = subject_wd_entered_name;
-}
-
-public Integer getCase_status_code() {
-    return case_status_code;
-}
-
-public void setCase_status_code(Integer case_status_code) {
-    this.case_status_code = case_status_code;
-}
-
-public String getCase_status_value() {
-    return case_status_value;
-}
-
-public void setCase_status_value(String case_status_value) {
-    this.case_status_value = case_status_value;
-}
-
-public LocalDateTime getCase_update_date() {
-    return case_update_date;
-}
-
-public void setCase_update_date(LocalDateTime case_update_date) {
-    this.case_update_date = case_update_date;
-}
-
-@Override
-public String toString() {
-  return "Case [" + 
-      "case_id=" + case_id + 
-      ", user_id_fk=" + user_id_fk + 
-      ", cm_id_fk=" + cm_id_fk + 
-      ", subject_id_fk=" + subject_id_fk + 
-      ", interpreter_id_fk=" + interpreter_id_fk + 
-      ", interp_id_doc_attach=" + interp_id_doc_attach + 
-      ", subject_declare_sig=" + subject_declare_sig + 
-      ", subject_dec_sig_doc_path=" + subject_dec_sig_doc_path + 
-      ", subject_dec_sig_doc_file_id=" + subject_dec_sig_doc_file_id + 
-      ", interp_declare_sig=" + interp_declare_sig + 
-      ", interp_dec_sig_doc_path=" + interp_dec_sig_doc_path + 
-      ", interp_dec_sig_doc_file_id=" + interp_dec_sig_doc_file_id + 
-      ", interp_declare=" + interp_declare + 
-      ", officer_id_fk=" + officer_id_fk + 
-      ", officer_declare=" + officer_declare + 
-      ", officer_declare_sig=" + officer_declare_sig + 
-      ", officer_dec_sig_doc_path=" + officer_dec_sig_doc_path + 
-      ", officer_dec_sig_doc_file_id=" + officer_dec_sig_doc_file_id + 
-      ", officer_declare_entered_name=" + officer_declare_entered_name + 
-      ", officer_field_office=" + officer_field_office + 
-      ", update_date=" + update_date + 
-      ", interp_dq=" + interp_dq + 
-      ", interp_dq_reason=" + interp_dq_reason + 
-      ", subject_dq_name=" + subject_dq_name + 
-      ", dq_reschedule=" + dq_reschedule + 
-      ", officer_dq_sig=" + officer_dq_sig + 
-      ", officer_dq_sig_doc_path=" + officer_dq_sig_doc_path + 
-      ", officer_dq_sig_doc_file_id=" + officer_dq_sig_doc_file_id + 
-      ", officer_dq_entered_name=" + officer_dq_entered_name + 
-      ", superv_dq_sig=" + superv_dq_sig + 
-      ", superv_dq_sig_doc_path=" + superv_dq_sig_doc_path + 
-      ", superv_dq_sig_doc_file_id=" + superv_dq_sig_doc_file_id + 
-      ", superv_dq_entered_name=" + superv_dq_entered_name + 
-      ", continue_wo_interpreter=" + continue_wo_interpreter + 
-      ", officer_wd_sig=" + officer_wd_sig + 
-      ", officer_wd_sig_doc_path=" + officer_wd_sig_doc_path + 
-      ", officer_wd_sig_doc_file_id=" + officer_wd_sig_doc_file_id + 
-      ", officer_wd_entered_name=" + officer_wd_entered_name + 
-      ", subject_wd_sig=" + subject_wd_sig + 
-      ", subject_wd_sig_doc_path=" + subject_wd_sig_doc_path + 
-      ", subject_wd_sig_doc_file_id=" + subject_wd_sig_doc_file_id + 
-      ", subject_wd_entered_name=" + subject_wd_entered_name + 
-      ", case_status_code=" + case_status_code + 
-      ", case_status_value=" + case_status_value + 
-      ", case_update_date=" + case_update_date + 
-      "]";
-}
+    @Column(name = "superv_dq_sig_doc_path")
+    private String supervDqSigDocPath;
+
+    @Column(name = "superv_dq_sig_doc_file_id")
+    private String supervDqSigDocFileId;
+
+    @Column(name = "superv_dq_entered_name")
+    private String supervDqEnteredName;
+
+    @Column(name = "continue_wo_interpreter")
+    private Boolean continueWoInterpreter;
+
+    @Column(name = "officer_wd_sig")
+    private String officerWdSig;
+
+    @Column(name = "officer_wd_sig_doc_path")
+    private String officerWdSigDocPath;
+
+    @Column(name = "officer_wd_sig_doc_file_id")
+    private String officerWdSigDocFileId;
+
+    @Column(name = "officer_wd_entered_name")
+    private String officerWdEnteredName;
+
+    @Column(name = "subject_wd_sig")
+    private String subjectWdSig;
+
+    @Column(name = "subject_wd_sig_doc_path")
+    private String subjectWdSigDocPath;
+
+    @Column(name = "subject_wd_sig_doc_file_id")
+    private String subjectWdSigDocFileId;
+
+    @Column(name = "subject_wd_entered_name")
+    private String subjectWdEnteredName;
+
+    @Column(name = "case_status_code")
+    private Integer caseStatusCode;
+
+    @Column(name = "case_status_value")
+    private String caseStatusValue;
+
+    @Column(name = "case_update_date")
+    private LocalDateTime caseUpdateDate;
+
+    public Case() {
+
+    }
+
+    public Case(int caseId, int userIdFk, int cmIdFk,
+            int subjectIdFk, int interpreterIdFk, boolean interpIdDocAttach, String subjectDeclareSig,
+            String subjectDecSigDocPath,
+            String subjectDecSigDocFileId, String interpDeclareSig, String interpDecSigDocPath,
+            String interpDecSigDocFileId,
+            Date interpDeclare, int officerIdFk, Date officerDeclare, String officerDeclareSig,
+            String officerDecSigDocPath, String officerDecSigDocFileId,
+            String officerDeclareEnteredName, String officerFieldOffice, Date updateDate, boolean interpDq,
+            String interpDqReason, String subjectDqName, boolean dqReschedule,
+            String officerDqSig, String officerDqSigDocPath, String officerDqSigDocFileId,
+            String officerDqEnteredName, String supervDqSig, String supervDqSigDocPath,
+            String supervDqSigDocFileId, String supervDqEnteredName, Boolean continueWoInterpreter,
+            String officerWdSig, String officerWdSigDocPath, String officerWdSigDocFileId,
+            String officerWdEnteredName, String subjectWdSig, String subjectWdSigDocPath,
+            String subjectWdSigDocFileId, String subjectWdEnteredName, Integer caseStatusCode,
+            String caseStatusValue, LocalDateTime caseUpdateDate) {
+        this.caseId = caseId;
+        this.userIdFk = userIdFk;
+        this.cmIdFk = cmIdFk;
+        this.subjectIdFk = subjectIdFk;
+        this.interpreterIdFk = interpreterIdFk;
+        this.interpIdDocAttach = interpIdDocAttach;
+        this.subjectDeclareSig = subjectDeclareSig;
+        this.subjectDecSigDocPath = subjectDecSigDocPath;
+        this.subjectDecSigDocFileId = subjectDecSigDocFileId;
+        this.interpDeclareSig = interpDeclareSig;
+        this.interpDecSigDocPath = interpDecSigDocPath;
+        this.interpDecSigDocFileId = interpDecSigDocFileId;
+        this.interpDeclare = interpDeclare;
+        this.officerIdFk = officerIdFk;
+        this.officerDeclare = officerDeclare;
+        this.officerDeclareSig = officerDeclareSig;
+        this.officerDecSigDocPath = officerDecSigDocPath;
+        this.officerDecSigDocFileId = officerDecSigDocFileId;
+        this.officerDeclareEnteredName = officerDeclareEnteredName;
+        this.officerFieldOffice = officerFieldOffice;
+        this.updateDate = updateDate;
+        this.interpDq = interpDq;
+        this.interpDqReason = interpDqReason;
+        this.subjectDqName = subjectDqName;
+        this.dqReschedule = dqReschedule;
+        this.officerDqSig = officerDqSig;
+        this.officerDqSigDocPath = officerDqSigDocPath;
+        this.officerDqSigDocFileId = officerDqSigDocFileId;
+        this.officerDqEnteredName = officerDqEnteredName;
+        this.supervDqSig = supervDqSig;
+        this.supervDqSigDocPath = supervDqSigDocPath;
+        this.supervDqSigDocFileId = supervDqSigDocFileId;
+        this.supervDqEnteredName = supervDqEnteredName;
+        this.continueWoInterpreter = continueWoInterpreter;
+        this.officerWdSig = officerWdSig;
+        this.officerWdSigDocPath = officerWdSigDocPath;
+        this.officerWdSigDocFileId = officerWdSigDocFileId;
+        this.officerWdEnteredName = officerWdEnteredName;
+        this.subjectWdSig = subjectWdSig;
+        this.subjectWdSigDocPath = subjectWdSigDocPath;
+        this.subjectWdSigDocFileId = subjectWdSigDocFileId;
+        this.subjectWdEnteredName = subjectWdEnteredName;
+        this.caseStatusCode = caseStatusCode;
+        this.caseStatusValue = caseStatusValue;
+        this.caseUpdateDate = caseUpdateDate;
+    }
+
+    public int getCaseId() {
+        return caseId;
+    }
+
+    public void setCaseId(int caseId) {
+        this.caseId = caseId;
+    }
+
+    public int getUserIdFk() {
+        return userIdFk;
+    }
+
+    public void setUserIdFk(int userIdFk) {
+        this.userIdFk = userIdFk;
+    }
+
+    public int getCmIdFk() {
+        return cmIdFk;
+    }
+
+    public void setCmIdFk(int cmIdFk) {
+        this.cmIdFk = cmIdFk;
+    }
+
+    public int getSubjectIdFk() {
+        return subjectIdFk;
+    }
+
+    public void setSubjectIdFk(int subjectIdFk) {
+        this.subjectIdFk = subjectIdFk;
+    }
+
+    public int getInterpreterIdFk() {
+        return interpreterIdFk;
+    }
+
+    public void setInterpreterIdFk(int interpreterIdFk) {
+        this.interpreterIdFk = interpreterIdFk;
+    }
+
+    public boolean isInterpIdDocAttach() {
+        return interpIdDocAttach;
+    }
+
+    public void setInterpIdDocAttach(boolean interpIdDocAttach) {
+        this.interpIdDocAttach = interpIdDocAttach;
+    }
+
+    public String getSubjectDeclareSig() {
+        return subjectDeclareSig;
+    }
+
+    public void setSubjectDeclareSig(String subjectDeclareSig) {
+        this.subjectDeclareSig = subjectDeclareSig;
+    }
+
+    public String getSubjectDecSigDocPath() {
+        return subjectDecSigDocPath;
+    }
+
+    public void setSubjectDecSigDocPath(String subjectDecSigDocPath) {
+        this.subjectDecSigDocPath = subjectDecSigDocPath;
+    }
+
+    public String getSubjectDecSigDocFileId() {
+        return subjectDecSigDocFileId;
+    }
+
+    public void setSubjectDecSigDocFileId(String subjectDecSigDocFileId) {
+        this.subjectDecSigDocFileId = subjectDecSigDocFileId;
+    }
+
+    public String getInterpDeclareSig() {
+        return interpDeclareSig;
+    }
+
+    public void setInterpDeclareSig(String interpDeclareSig) {
+        this.interpDeclareSig = interpDeclareSig;
+    }
+
+    public String getInterpDecSigDocPath() {
+        return interpDecSigDocPath;
+    }
+
+    public void setInterpDecSigDocPath(String interpDecSigDocPath) {
+        this.interpDecSigDocPath = interpDecSigDocPath;
+    }
+
+    public String getInterpDecSigDocFileId() {
+        return interpDecSigDocFileId;
+    }
+
+    public void setInterpDecSigDocFileId(String interpDecSigDocFileId) {
+        this.interpDecSigDocFileId = interpDecSigDocFileId;
+    }
+
+    public Date getInterpDeclare() {
+        return interpDeclare;
+    }
+
+    public void setInterpDeclare(Date interpDeclare) {
+        this.interpDeclare = interpDeclare;
+    }
+
+    public int getOfficerIdFk() {
+        return officerIdFk;
+    }
+
+    public void setOfficerIdFk(int officerIdFk) {
+        this.officerIdFk = officerIdFk;
+    }
+
+    public Date getOfficerDeclare() {
+        return officerDeclare;
+    }
+
+    public void setOfficerDeclare(Date officerDeclare) {
+        this.officerDeclare = officerDeclare;
+    }
+
+    public String getOfficerDeclareSig() {
+        return officerDeclareSig;
+    }
+
+    public void setOfficerDeclareSig(String officerDeclareSig) {
+        this.officerDeclareSig = officerDeclareSig;
+    }
+
+    public String getOfficerDecSigDocPath() {
+        return officerDecSigDocPath;
+    }
+
+    public void setOfficerDecSigDocPath(String officerDecSigDocPath) {
+        this.officerDecSigDocPath = officerDecSigDocPath;
+    }
+
+    public String getOfficerDecSigDocFileId() {
+        return officerDecSigDocFileId;
+    }
+
+    public void setOfficerDecSigDocFileId(String officerDecSigDocFileId) {
+        this.officerDecSigDocFileId = officerDecSigDocFileId;
+    }
+
+    public String getOfficerDeclareEnteredName() {
+        return officerDeclareEnteredName;
+    }
+
+    public void setOfficerDeclareEnteredName(String officerDeclareEnteredName) {
+        this.officerDeclareEnteredName = officerDeclareEnteredName;
+    }
+
+    public String getOfficerFieldOffice() {
+        return officerFieldOffice;
+    }
+
+    public void setOfficerFieldOffice(String officerFieldOffice) {
+        this.officerFieldOffice = officerFieldOffice;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public boolean isInterpDq() {
+        return interpDq;
+    }
+
+    public void setInterpDq(boolean interpDq) {
+        this.interpDq = interpDq;
+    }
+
+    public String getInterpDqReason() {
+        return interpDqReason;
+    }
+
+    public void setInterpDqReason(String interpDqReason) {
+        this.interpDqReason = interpDqReason;
+    }
+
+    public String getSubjectDqName() {
+        return subjectDqName;
+    }
+
+    public void setSubjectDqName(String subjectDqName) {
+        this.subjectDqName = subjectDqName;
+    }
+
+    public boolean isDqReschedule() {
+        return dqReschedule;
+    }
+
+    public void setDqReschedule(boolean dqReschedule) {
+        this.dqReschedule = dqReschedule;
+    }
+
+    public String getOfficerDqSig() {
+        return officerDqSig;
+    }
+
+    public void setOfficerDqSig(String officerDqSig) {
+        this.officerDqSig = officerDqSig;
+    }
+
+    public String getOfficerDqSigDocPath() {
+        return officerDqSigDocPath;
+    }
+
+    public void setOfficerDqSigDocPath(String officerDqSigDocPath) {
+        this.officerDqSigDocPath = officerDqSigDocPath;
+    }
+
+    public String getOfficerDqSigDocFileId() {
+        return officerDqSigDocFileId;
+    }
+
+    public void setOfficerDqSigDocFileId(String officerDqSigDocFileId) {
+        this.officerDqSigDocFileId = officerDqSigDocFileId;
+    }
+
+    public String getOfficerDqEnteredName() {
+        return officerDqEnteredName;
+    }
+
+    public void setOfficerDqEnteredName(String officerDqEnteredName) {
+        this.officerDqEnteredName = officerDqEnteredName;
+    }
+
+    public String getSupervDqSig() {
+        return supervDqSig;
+    }
+
+    public void setSupervDqSig(String supervDqSig) {
+        this.supervDqSig = supervDqSig;
+    }
+
+    public String getSupervDqSigDocPath() {
+        return supervDqSigDocPath;
+    }
+
+    public void setSupervDqSigDocPath(String supervDqSigDocPath) {
+        this.supervDqSigDocPath = supervDqSigDocPath;
+    }
+
+    public String getSupervDqSigDocFileId() {
+        return supervDqSigDocFileId;
+    }
+
+    public void setSupervDqSigDocFileId(String supervDqSigDocFileId) {
+        this.supervDqSigDocFileId = supervDqSigDocFileId;
+    }
+
+    public String getSupervDqEnteredName() {
+        return supervDqEnteredName;
+    }
+
+    public void setSupervDqEnteredName(String supervDqEnteredName) {
+        this.supervDqEnteredName = supervDqEnteredName;
+    }
+
+    public Boolean getContinueWoInterpreter() {
+        return continueWoInterpreter;
+    }
+
+    public void setContinueWoInterpreter(Boolean continueWoInterpreter) {
+        this.continueWoInterpreter = continueWoInterpreter;
+    }
+
+    public String getOfficerWdSig() {
+        return officerWdSig;
+    }
+
+    public void setOfficerWdSig(String officerWdSig) {
+        this.officerWdSig = officerWdSig;
+    }
+
+    public String getOfficerWdSigDocPath() {
+        return officerWdSigDocPath;
+    }
+
+    public void setOfficerWdSigDocPath(String officerWdSigDocPath) {
+        this.officerWdSigDocPath = officerWdSigDocPath;
+    }
+
+    public String getOfficerWdSigDocFileId() {
+        return officerWdSigDocFileId;
+    }
+
+    public void setOfficerWdSigDocFileId(String officerWdSigDocFileId) {
+        this.officerWdSigDocFileId = officerWdSigDocFileId;
+    }
+
+    public String getOfficerWdEnteredName() {
+        return officerWdEnteredName;
+    }
+
+    public void setOfficerWdEnteredName(String officerWdEnteredName) {
+        this.officerWdEnteredName = officerWdEnteredName;
+    }
+
+    public String getSubjectWdSig() {
+        return subjectWdSig;
+    }
+
+    public void setSubjectWdSig(String subjectWdSig) {
+        this.subjectWdSig = subjectWdSig;
+    }
+
+    public String getSubjectWdSigDocPath() {
+        return subjectWdSigDocPath;
+    }
+
+    public void setSubjectWdSigDocPath(String subjectWdSigDocPath) {
+        this.subjectWdSigDocPath = subjectWdSigDocPath;
+    }
+
+    public String getSubjectWdSigDocFileId() {
+        return subjectWdSigDocFileId;
+    }
+
+    public void setSubjectWdSigDocFileId(String subjectWdSigDocFileId) {
+        this.subjectWdSigDocFileId = subjectWdSigDocFileId;
+    }
+
+    public String getSubjectWdEnteredName() {
+        return subjectWdEnteredName;
+    }
+
+    public void setSubjectWdEnteredName(String subjectWdEnteredName) {
+        this.subjectWdEnteredName = subjectWdEnteredName;
+    }
+
+    public Integer getCaseStatusCode() {
+        return caseStatusCode;
+    }
+
+    public void setCaseStatusCode(Integer caseStatusCode) {
+        this.caseStatusCode = caseStatusCode;
+    }
+
+    public String getCaseStatusValue() {
+        return caseStatusValue;
+    }
+
+    public void setCaseStatusValue(String caseStatusValue) {
+        this.caseStatusValue = caseStatusValue;
+    }
+
+    public LocalDateTime getCaseUpdateDate() {
+        return caseUpdateDate;
+    }
+
+    public void setCaseUpdateDate(LocalDateTime caseUpdateDate) {
+        this.caseUpdateDate = caseUpdateDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Case [" +
+                "caseId=" + caseId +
+                ", userIdFk=" + userIdFk +
+                ", cmIdFk=" + cmIdFk +
+                ", subjectIdFk=" + subjectIdFk +
+                ", interpreterIdFk=" + interpreterIdFk +
+                ", interpIdDocAttach=" + interpIdDocAttach +
+                ", subjectDeclareSig=" + subjectDeclareSig +
+                ", subjectDecSigDocPath=" + subjectDecSigDocPath +
+                ", subjectDecSigDocFileId=" + subjectDecSigDocFileId +
+                ", interpDeclareSig=" + interpDeclareSig +
+                ", interpDecSigDocPath=" + interpDecSigDocPath +
+                ", interpDecSigDocFileId=" + interpDecSigDocFileId +
+                ", interpDeclare=" + interpDeclare +
+                ", officerIdFk=" + officerIdFk +
+                ", officerDeclare=" + officerDeclare +
+                ", officerDeclareSig=" + officerDeclareSig +
+                ", officerDecSigDocPath=" + officerDecSigDocPath +
+                ", officerDecSigDocFileId=" + officerDecSigDocFileId +
+                ", officerDeclareEnteredName=" + officerDeclareEnteredName +
+                ", officerFieldOffice=" + officerFieldOffice +
+                ", updateDate=" + updateDate +
+                ", interpDq=" + interpDq +
+                ", interpDqReason=" + interpDqReason +
+                ", subjectDqName=" + subjectDqName +
+                ", dqReschedule=" + dqReschedule +
+                ", officerDqSig=" + officerDqSig +
+                ", officerDqSigDocPath=" + officerDqSigDocPath +
+                ", officerDqSigDocFileId=" + officerDqSigDocFileId +
+                ", officerDqEnteredName=" + officerDqEnteredName +
+                ", supervDqSig=" + supervDqSig +
+                ", supervDqSigDocPath=" + supervDqSigDocPath +
+                ", supervDqSigDocFileId=" + supervDqSigDocFileId +
+                ", supervDqEnteredName=" + supervDqEnteredName +
+                ", continueWoInterpreter=" + continueWoInterpreter +
+                ", officerWdSig=" + officerWdSig +
+                ", officerWdSigDocPath=" + officerWdSigDocPath +
+                ", officerWdSigDocFileId=" + officerWdSigDocFileId +
+                ", officerWdEnteredName=" + officerWdEnteredName +
+                ", subjectWdSig=" + subjectWdSig +
+                ", subjectWdSigDocPath=" + subjectWdSigDocPath +
+                ", subjectWdSigDocFileId=" + subjectWdSigDocFileId +
+                ", subjectWdEnteredName=" + subjectWdEnteredName +
+                ", caseStatusCode=" + caseStatusCode +
+                ", caseStatusValue=" + caseStatusValue +
+                ", caseUpdateDate=" + caseUpdateDate +
+                "]";
+    }
 
 }

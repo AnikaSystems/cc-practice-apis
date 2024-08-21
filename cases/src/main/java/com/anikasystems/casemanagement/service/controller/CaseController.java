@@ -30,14 +30,14 @@ public class CaseController {
   CaseRepository caseRepository;
 
   @GetMapping("/cases")
-  public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String status) {
+  public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) Integer status) {
     try {
       List<Case> cases = new ArrayList<Case>();
 
       if (status == null)
         caseRepository.findAll().forEach(cases::add);
       else
-        caseRepository.findByCase_status_code(status).forEach(cases::add);
+        caseRepository.findByCaseStatusCode(status).forEach(cases::add);
 
       if (cases.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -51,7 +51,7 @@ public class CaseController {
 
   @GetMapping("/cases/{id}")
   public ResponseEntity<Case> getCaseById(@PathVariable("id") int id) {
-    List<Case> caseData = caseRepository.findByCase_Id(id);
+    List<Case> caseData = caseRepository.findByCaseId(id);
 
     if (caseData!=null) {
       return new ResponseEntity<>(HttpStatus.OK);

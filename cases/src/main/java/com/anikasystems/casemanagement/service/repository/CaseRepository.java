@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.anikasystems.casemanagement.service.model.Case;
 
+
 public interface CaseRepository extends JpaRepository<Case, Long> {
 
-  List<Case> findByCase_Id(int id);
-  List<Case> findByUser_Id_Fk(String user_id_fk);
-  List<Case> findByCase_status_code(String case_status_code);
-
+    List<Case> findByCaseId(int caseId);
+    List<Case> findByUserIdFk(int userIdFk);
+    List<Case> findByCaseStatusCode(Integer caseStatusCode);
 
 }

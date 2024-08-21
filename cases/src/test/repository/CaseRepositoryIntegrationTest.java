@@ -77,7 +77,7 @@ public class CaseRepositoryIntegrationTest {
             LocalDateTime.now() // case_update_date
         );
         CaseRepository.save(newCase);
-        assert(entityManager.find(Case.class, newCase.getCase_id()).equals(newCase));    
+        assert(entityManager.find(Case.class, newCase.getCase_id()).equals(1));    
     }
 
     @Test
