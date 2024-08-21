@@ -22,7 +22,7 @@ import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
 import com.anikasystems.casemanagement.service.jms.SimpleQueue;
 
-@CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
+@CrossOrigin(origins = {"https://cc-case-management.s3.amazonaws.com","https://7juyht0nz7.execute-api.us-east-1.amazonaws.com/"})
 @RestController
 @RequestMapping("/api")
 public class CaseController {
