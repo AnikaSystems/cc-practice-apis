@@ -29,7 +29,7 @@ import com.anikasystems.users.service.repository.IntervieweeRepository;
 import com.anikasystems.users.service.repository.OfficerRepository;
 import com.anikasystems.users.service.repository.UserRepository;
 
-@CrossOrigin(origins = "https://cc-User-management.s3.amazonaws.com")
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class InterpreterController {
@@ -117,8 +117,8 @@ public class InterpreterController {
     Map<String, String> responseBody = new HashMap<>();
     
     if (oktaInfo.isEmpty()) {
-      responseBody.put("error", "Failed to connect to Authentication provider");
-      return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
+      //responseBody.put("error", "Failed to connect to Authentication provider");
+      //return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     if (oktaInfo.indexOf("401")>=0) {
         //return new ResponseEntity<>(HttpStatus.FORBIDDEN);

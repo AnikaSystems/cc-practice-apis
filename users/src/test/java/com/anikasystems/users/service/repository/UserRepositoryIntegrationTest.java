@@ -37,7 +37,7 @@ public class UserRepositoryIntegrationTest {
         //testing the 'R' in CRUD
         User newUser = entityManager.find(User.class, 1);
         assert(newUser.getUserName().equals("endusera"));
-        assert(newUser.getEmail()==null);
+        assert(newUser.getEmail().equals("emahmud+endusera@adgtech.net"));
     }
 
     @Test
