@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anikasystems.users.service.model.User;
 import com.anikasystems.users.service.repository.UserRepository;
 
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
