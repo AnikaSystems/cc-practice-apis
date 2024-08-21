@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
-import com.anikasystems.casemanagement.service.jms.SimpleQueue;
 
 @CrossOrigin(origins = "https://cc-case-management.s3.amazonaws.com")
 @RestController
@@ -31,14 +30,14 @@ public class CaseController {
   CaseRepository caseRepository;
 
   @GetMapping("/cases")
-  public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String title) {
+  public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) String status) {
     try {
       List<Case> cases = new ArrayList<Case>();
 
-      if (title == null)
+      if (status == null)
         caseRepository.findAll().forEach(cases::add);
       else
-        // caseRepository.findByTitleContainingIgnoreCase(title).forEach(cases::add);
+        caseRepository.findByCase_status_code(status).forEach(cases::add);
 
       if (cases.isEmpty()) {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -51,11 +50,11 @@ public class CaseController {
   }
 
   @GetMapping("/cases/{id}")
-  public ResponseEntity<Case> getCaseById(@PathVariable("id") long id) {
-    Optional<Case> caseData = caseRepository.findById(id);
+  public ResponseEntity<Case> getCaseById(@PathVariable("id") int id) {
+    List<Case> caseData = caseRepository.findByCase_Id(id);
 
-    if (caseData.isPresent()) {
-      return new ResponseEntity<>(caseData.get(), HttpStatus.OK);
+    if (caseData!=null) {
+      return new ResponseEntity<>(HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -64,12 +63,10 @@ public class CaseController {
   @PostMapping("/cases")
   public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
     try {
-      //Case _case = caseRepository.save(new Case(caseData.getTitle(), caseData.getDescription(), false));
+      
 
-      SimpleQueue queue = new SimpleQueue("cases");
-      //queue.send(caseData.getTitle());
-      queue.close();
       Case _case = caseData;
+      Case _caseSave = caseRepository.save(_case);
       return new ResponseEntity<>(_case, HttpStatus.CREATED);
     } catch (Exception e) {
       return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
