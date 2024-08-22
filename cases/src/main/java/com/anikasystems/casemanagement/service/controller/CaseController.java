@@ -39,9 +39,9 @@ public class CaseController {
       else
         caseRepository.findByCaseStatusCode(status).forEach(cases::add);
 
-      if (cases.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
+      // if (cases.isEmpty()) {
+      //   return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      // }
 
       return new ResponseEntity<>(cases, HttpStatus.OK);
     } catch (Exception e) {
