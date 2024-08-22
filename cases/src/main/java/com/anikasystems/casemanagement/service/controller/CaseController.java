@@ -34,10 +34,10 @@ public class CaseController {
     try {
       List<Case> cases = new ArrayList<Case>();
 
-      if (status == null)
+      //if (status == null)
         caseRepository.findAll().forEach(cases::add);
-      else
-        caseRepository.findByCaseStatusCode(status).forEach(cases::add);
+      //else
+      //  caseRepository.findByCaseStatusCode(status).forEach(cases::add);
 
       // if (cases.isEmpty()) {
       //   return new ResponseEntity<>(HttpStatus.NO_CONTENT);
