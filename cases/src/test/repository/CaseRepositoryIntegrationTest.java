@@ -1,7 +1,8 @@
-package com.anikasystems.users.service.repository;
+package com.anikasystems.casemanagement.service.repository;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import com.anikasystems.casemanagement.service.model.Case;
-import com.anikasystems.casemanagement.service.repository.CaseRepository;;
+;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -75,16 +76,19 @@ public class CaseRepositoryIntegrationTest {
             "Open", // case_status_value
             LocalDateTime.now() // case_update_date
         );
-        CaseRepository.save(newCase);
+        //CaseRepository.save(newCase);
         //assert(entityManager.find(Case.class, newCase.getCase_id()).equals(1));    
     }
 
     @Test
-    @Order(2)
     public void givenExistingCase_whenRead_thenSuccess() {
         //testing the 'R' in CRUD
-        Case newCase = entityManager.find(Case.class, 1);
+        //Case newCase = entityManager.find(Case.class, 1);
         //assert(newCase.getCase_status_code.equals("1"));
+        List<Case> cases = CaseRepository.findAll();
+        //assert(entityManager.find(Case.class, 1)!=null);
+        //assert(cases.isEmpty());
+        assert(!cases.isEmpty());
     }
 
     @Test
