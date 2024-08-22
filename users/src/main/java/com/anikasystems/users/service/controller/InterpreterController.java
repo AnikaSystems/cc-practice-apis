@@ -51,7 +51,7 @@ public class InterpreterController {
 
   @PutMapping("/interpreter/request")
   public ResponseEntity<Map<String, String>> requestInterpreter(@RequestHeader("Authorization") String bearer, @RequestBody MultiValueMap<String,String> paramMap) {
-    // call OKTA to get interviewee user info
+    // TODO (blocked by RIV-153) -call OKTA to get interviewee user info
     // get interviewee user email address from Okta data
     StringBuffer oktaInfo = getOktaInfo(bearer);
     Map<String, String> responseBody = new HashMap<>();
@@ -67,7 +67,7 @@ public class InterpreterController {
         //return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
     
-    // TODO get User and Interviewee objects from DB
+    // TODO (blocked by RIV-153) - get User and Interviewee objects from DB
     // Optional<User> UserData = UserRepository.findByEmail(email);
 
     // Get Interviewee object based on ARN and update with new data
@@ -101,7 +101,8 @@ public class InterpreterController {
       interpreterRepository.save(interpreter);     
     }  
 
-    // TODO get case ID via call to case service
+    // TODO (blocked by RIV-154) - Call case service to update with user sign boolean and  
+    // interpreter ID and return the case ID
     Timestamp timestamp = new Timestamp(System.currentTimeMillis());
     responseBody.put("id", "1");
     responseBody.put("createdAt", timestamp.toString());
