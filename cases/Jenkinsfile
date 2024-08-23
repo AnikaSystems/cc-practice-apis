@@ -119,13 +119,21 @@ pipeline {
             }
         }
 
+        stage('Helm Verify') {
+            steps {
+                script {
+                    sh "KUBECONFIG=/home/ec2-user/.kube/singlevpc-deploy-dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_BRANCH_SHORT}"
+                    sh "helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_BRANCH_SHORT} --dry-run=server"
+                }
+            }
+        }  
+
         stage('Deploy to DEV') {
             steps {
                 input 'Deploy to DEV?'
                 script {
-                    export KUBECONFIG=/home/ec2-user/.kube/singlevpc-deploy-dev-eks.config
-                    helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_BRANCH_SHORT}
-                    helm fullstatus -n app cases
+                    sh "KUBECONFIG=/home/ec2-user/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_BRANCH_SHORT}"
+                    sh "KUBECONFIG=/home/ec2-user/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
