@@ -12,13 +12,30 @@ pipeline {
                 script{
                     def scmVars = checkout scm
                     GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
+                    GIT_COMMIT_MSG = scmVars.GIT_COMMIT_MSG
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+
+                    GIT_HYBRID = GIT_BRANCH_SHORT + "-" + GIT_COMMIT
+                    
+                    GIT_AUTHOR_COMMITTER = ""
+                    GIT_COMMIT_MSG = ""
+                    for (changeLogSet in currentBuild.changeSets) {
+                        for (entry in changeLogSet.items) {
+                            // Get details from the latest entry
+                            GIT_AUTHOR_COMMITTER = entry.author.toString()
+                            GIT_COMMIT_MSG = entry.msg.toString()
+                        }
+                    }
+                    
                     echo "GIT_COMMIT: ${GIT_COMMIT}"
+                    echo "GIT_COMMIT_MSG: ${GIT_COMMIT_MSG}"
+                    echo "GIT_AUTHOR_COMMITTER: ${GIT_AUTHOR_COMMITTER}"
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
+                    echo "GIT_HYBRID: ${GIT_HYBRID}"
                 }
             }
         }
@@ -26,9 +43,11 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 sh 'mvn -f users/pom.xml dependency:go-offline'
-                 sh 'mvn -f users/pom.xml package'
-                 app = docker.build("cc-users:${env.BUILD_NUMBER}", "-f users/Dockerfile .")
+                  currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
+                  currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
+                  sh 'mvn -f users/pom.xml dependency:go-offline'
+                  sh 'mvn -f users/pom.xml package'
+                  app = docker.build("cc-users:${env.BUILD_NUMBER}", "-f users/Dockerfile .")
                 }
             }
         }
@@ -52,13 +71,14 @@ pipeline {
             }
         }
 
-        stage('Deploy to ECR') {
+        stage('Push to ECR') {
             steps {
                 script{
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
                         app.push("${env.BUILD_NUMBER}")
                         app.push ("${GIT_BRANCH_SHORT}")
                         app.push("${GIT_COMMIT}")
+                        app.push("${GIT_HYBRID}")
                         app.push("latest")
                     }
                 }
@@ -102,5 +122,49 @@ pipeline {
                 }
             }
         }
+
+        stage('Helm Verify') {
+            steps {
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm template users users/chart/users --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
+                }
+            }
+        }  
+
+        stage('Deploy to DEV') {
+            steps {
+                input 'Deploy to DEV?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app users"
+                }
+            }
+        }  
+
+        stage('Deploy to TEST') {
+            steps {
+                input 'Deploy to TEST?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm fullstatus -n app users"
+                }
+            }
+        }  
+
+        stage('Deploy to PROD') {
+            when {
+                expression {
+                    branch "release/*"
+                }
+            }
+            steps {
+                input 'Deploy to PROD?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm fullstatus -n app users"
+                }
+            }
+        }  
     }
 }
