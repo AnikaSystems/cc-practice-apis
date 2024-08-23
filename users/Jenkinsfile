@@ -134,7 +134,9 @@ pipeline {
 
         stage('Deploy to DEV') {
             steps {
-                input 'Deploy to DEV?'
+                timeout(time: 10, unit: 'MINUTES') {
+                    input 'Deploy to DEV?'
+                }
                 script {
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app users"
@@ -144,7 +146,9 @@ pipeline {
 
         stage('Deploy to TEST') {
             steps {
-                input 'Deploy to TEST?'
+                timeout(time: 10, unit: 'MINUTES') {
+                    input 'Deploy to TEST?'
+                }
                 script {
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm fullstatus -n app users"
@@ -159,7 +163,9 @@ pipeline {
                 }
             }
             steps {
-                input 'Deploy to PROD?'
+                timeout(time: 10, unit: 'MINUTES') {
+                    input 'Deploy to PROD?'
+                }
                 script {
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm fullstatus -n app users"
