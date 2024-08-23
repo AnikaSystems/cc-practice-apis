@@ -47,6 +47,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-activemq</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
