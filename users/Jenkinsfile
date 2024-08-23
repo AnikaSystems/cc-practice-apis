@@ -29,9 +29,11 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                 sh 'mvn -f users/pom.xml dependency:go-offline'
-                 sh 'mvn -f users/pom.xml package'
-                 app = docker.build("cc-users:${env.BUILD_NUMBER}", "-f users/Dockerfile .")
+                  currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
+                  currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
+                  sh 'mvn -f users/pom.xml dependency:go-offline'
+                  sh 'mvn -f users/pom.xml package'
+                  app = docker.build("cc-users:${env.BUILD_NUMBER}", "-f users/Dockerfile .")
                 }
             }
         }
@@ -55,7 +57,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to ECR') {
+        stage('Push to ECR') {
             steps {
                 script{
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
@@ -126,6 +128,29 @@ pipeline {
             }
         }  
 
+        stage('Deploy to TEST') {
+            steps {
+                input 'Deploy to TEST?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm fullstatus -n app users"
+                }
+            }
+        }  
 
+        stage('Deploy to PROD') {
+            when {
+                expression {
+                    branch "release/*"
+                }
+            }
+            steps {
+                input 'Deploy to PROD?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm upgrade --install -n app users users/chart/users --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm fullstatus -n app users"
+                }
+            }
+        }  
     }
 }

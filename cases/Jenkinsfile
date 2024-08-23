@@ -71,7 +71,7 @@ pipeline {
             }
         }
 
-        stage('Deploy to ECR') {
+        stage('Push to ECR') {
             steps {
                 script{
                     docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
@@ -138,6 +138,31 @@ pipeline {
                 script {
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
                     sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app cases"
+                }
+            }
+        }  
+
+        stage('Deploy to TEST') {
+            steps {
+                input 'Deploy to TEST?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm fullstatus -n app cases"
+                }
+            }
+        }  
+
+        stage('Deploy to PROD') {
+            when {
+                expression {
+                    branch "release/*"
+                }
+            }
+            steps {
+                input 'Deploy to PROD?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
