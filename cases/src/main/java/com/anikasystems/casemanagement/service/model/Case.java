@@ -18,22 +18,22 @@ public class Case {
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     @Column(name = "case_id")
-    private int caseId;
+    private Integer caseId;
 
     @Column(name = "user_id_fk")
-    private int userIdFk;
+    private Integer userIdFk;
 
     @Column(name = "cm_id_fk")
-    private int cmIdFk;
+    private Integer cmIdFk;
 
     @Column(name = "subject_id_fk")
-    private int subjectIdFk;
+    private Integer subjectIdFk;
 
     @Column(name = "interpreter_id_fk")
-    private int interpreterIdFk;
+    private Integer interpreterIdFk;
 
     @Column(name = "interp_id_doc_attach")
-    private boolean interpIdDocAttach;
+    private Boolean interpIdDocAttach;
 
     @Column(name = "subject_declare_sig")
     private String subjectDeclareSig;
@@ -54,13 +54,13 @@ public class Case {
     private String interpDecSigDocFileId;
 
     @Column(name = "interp_declare")
-    private Date interpDeclare;
+    private LocalDateTime interpDeclare;
 
     @Column(name = "officer_id_fk")
-    private int officerIdFk;
+    private Integer officerIdFk;
 
     @Column(name = "officer_declare")
-    private Date officerDeclare;
+    private LocalDateTime officerDeclare;
 
     @Column(name = "officer_declare_sig")
     private String officerDeclareSig;
@@ -78,10 +78,10 @@ public class Case {
     private String officerFieldOffice;
 
     @Column(name = "update_date")
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
     @Column(name = "interp_dq")
-    private boolean interpDq;
+    private Boolean interpDq;
 
     @Column(name = "interp_dq_reason")
     private String interpDqReason;
@@ -90,7 +90,7 @@ public class Case {
     private String subjectDqName;
 
     @Column(name = "dq_reschedule")
-    private boolean dqReschedule;
+    private Boolean dqReschedule;
 
     @Column(name = "officer_dq_sig")
     private String officerDqSig;
@@ -156,15 +156,15 @@ public class Case {
 
     }
 
-    public Case(int caseId, int userIdFk, int cmIdFk,
-            int subjectIdFk, int interpreterIdFk, boolean interpIdDocAttach, String subjectDeclareSig,
+    public Case(Integer caseId, Integer userIdFk, Integer cmIdFk,
+            Integer subjectIdFk, Integer interpreterIdFk, Boolean interpIdDocAttach, String subjectDeclareSig,
             String subjectDecSigDocPath,
             String subjectDecSigDocFileId, String interpDeclareSig, String interpDecSigDocPath,
             String interpDecSigDocFileId,
-            Date interpDeclare, int officerIdFk, Date officerDeclare, String officerDeclareSig,
+            LocalDateTime interpDeclare, Integer officerIdFk, LocalDateTime officerDeclare, String officerDeclareSig,
             String officerDecSigDocPath, String officerDecSigDocFileId,
-            String officerDeclareEnteredName, String officerFieldOffice, Date updateDate, boolean interpDq,
-            String interpDqReason, String subjectDqName, boolean dqReschedule,
+            String officerDeclareEnteredName, String officerFieldOffice, LocalDateTime updateDate, Boolean interpDq,
+            String interpDqReason, String subjectDqName, Boolean dqReschedule,
             String officerDqSig, String officerDqSigDocPath, String officerDqSigDocFileId,
             String officerDqEnteredName, String supervDqSig, String supervDqSigDocPath,
             String supervDqSigDocFileId, String supervDqEnteredName, Boolean continueWoInterpreter,
@@ -219,51 +219,51 @@ public class Case {
         this.caseUpdateDate = caseUpdateDate;
     }
 
-    public int getCaseId() {
+    public Integer getCaseId() {
         return caseId;
     }
 
-    public void setCaseId(int caseId) {
+    public void setCaseId(Integer caseId) {
         this.caseId = caseId;
     }
 
-    public int getUserIdFk() {
+    public Integer getUserIdFk() {
         return userIdFk;
     }
 
-    public void setUserIdFk(int userIdFk) {
+    public void setUserIdFk(Integer userIdFk) {
         this.userIdFk = userIdFk;
     }
 
-    public int getCmIdFk() {
+    public Integer getCmIdFk() {
         return cmIdFk;
     }
 
-    public void setCmIdFk(int cmIdFk) {
+    public void setCmIdFk(Integer cmIdFk) {
         this.cmIdFk = cmIdFk;
     }
 
-    public int getSubjectIdFk() {
+    public Integer getSubjectIdFk() {
         return subjectIdFk;
     }
 
-    public void setSubjectIdFk(int subjectIdFk) {
+    public void setSubjectIdFk(Integer subjectIdFk) {
         this.subjectIdFk = subjectIdFk;
     }
 
-    public int getInterpreterIdFk() {
+    public Integer getInterpreterIdFk() {
         return interpreterIdFk;
     }
 
-    public void setInterpreterIdFk(int interpreterIdFk) {
+    public void setInterpreterIdFk(Integer interpreterIdFk) {
         this.interpreterIdFk = interpreterIdFk;
     }
 
-    public boolean isInterpIdDocAttach() {
+    public Boolean isInterpIdDocAttach() {
         return interpIdDocAttach;
     }
 
-    public void setInterpIdDocAttach(boolean interpIdDocAttach) {
+    public void setInterpIdDocAttach(Boolean interpIdDocAttach) {
         this.interpIdDocAttach = interpIdDocAttach;
     }
 
@@ -315,27 +315,27 @@ public class Case {
         this.interpDecSigDocFileId = interpDecSigDocFileId;
     }
 
-    public Date getInterpDeclare() {
+    public LocalDateTime getInterpDeclare() {
         return interpDeclare;
     }
 
-    public void setInterpDeclare(Date interpDeclare) {
+    public void setInterpDeclare(LocalDateTime interpDeclare) {
         this.interpDeclare = interpDeclare;
     }
 
-    public int getOfficerIdFk() {
+    public Integer getOfficerIdFk() {
         return officerIdFk;
     }
 
-    public void setOfficerIdFk(int officerIdFk) {
+    public void setOfficerIdFk(Integer officerIdFk) {
         this.officerIdFk = officerIdFk;
     }
 
-    public Date getOfficerDeclare() {
+    public LocalDateTime getOfficerDeclare() {
         return officerDeclare;
     }
 
-    public void setOfficerDeclare(Date officerDeclare) {
+    public void setOfficerDeclare(LocalDateTime officerDeclare) {
         this.officerDeclare = officerDeclare;
     }
 
@@ -379,19 +379,19 @@ public class Case {
         this.officerFieldOffice = officerFieldOffice;
     }
 
-    public Date getUpdateDate() {
+    public LocalDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(LocalDateTime updateDate) {
         this.updateDate = updateDate;
     }
 
-    public boolean isInterpDq() {
+    public Boolean isInterpDq() {
         return interpDq;
     }
 
-    public void setInterpDq(boolean interpDq) {
+    public void setInterpDq(Boolean interpDq) {
         this.interpDq = interpDq;
     }
 
@@ -411,11 +411,11 @@ public class Case {
         this.subjectDqName = subjectDqName;
     }
 
-    public boolean isDqReschedule() {
+    public Boolean isDqReschedule() {
         return dqReschedule;
     }
 
-    public void setDqReschedule(boolean dqReschedule) {
+    public void setDqReschedule(Boolean dqReschedule) {
         this.dqReschedule = dqReschedule;
     }
 
