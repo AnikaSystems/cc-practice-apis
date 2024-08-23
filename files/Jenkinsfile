@@ -33,6 +33,9 @@ pipeline {
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
+                
+                    GIT_HYBRID = GIT_BRANCH_SHORT + "-" + GIT_COMMIT 
+                    echo "GIT_HYBRID: ${GIT_HYBRID}"
                 }
             }
         }
@@ -118,5 +121,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Helm Verify') {
+            steps {
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm template files files/chart/files --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app files files/chart/files --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
+                }
+            }
+        }  
+
+        stage('Deploy to DEV') {
+            steps {
+                input 'Deploy to DEV?'
+                script {
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app files files/chart/files --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app files"
+                }
+            }
+        }  
+
+
     }
 }
