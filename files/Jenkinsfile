@@ -16,6 +16,8 @@ pipeline {
                     GIT_BRANCH_FULL = scmVars.GIT_BRANCH
                     GIT_BRANCH_LONG = scmVars.GIT_BRANCH.split('/')[1..-1].join('/')
                     GIT_BRANCH_SHORT = scmVars.GIT_BRANCH.split('/')[-1]
+
+                    GIT_HYBRID = GIT_BRANCH_SHORT + "-" + GIT_COMMIT
                     
                     GIT_AUTHOR_COMMITTER = ""
                     GIT_COMMIT_MSG = ""
@@ -33,8 +35,6 @@ pipeline {
                     echo "GIT_BRANCH_FULL: ${GIT_BRANCH_FULL}"
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
-                
-                    GIT_HYBRID = GIT_BRANCH_SHORT + "-" + GIT_COMMIT 
                     echo "GIT_HYBRID: ${GIT_HYBRID}"
                 }
             }
