@@ -118,5 +118,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to DEV') {
+            steps {
+                input 'Deploy to DEV?'
+                script {
+                    export KUBECONFIG=/home/ec2-user/.kube/singlevpc-deploy-dev-eks.config
+                    helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_BRANCH_SHORT}
+                    helm fullstatus -n app cases
+                }
+            }
+        }  
     }
 }
