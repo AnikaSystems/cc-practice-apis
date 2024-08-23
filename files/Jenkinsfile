@@ -66,7 +66,7 @@ pipeline {
                 script {
                     withSonarQubeEnv() {
                         echo "Run SonarQube Scanner"
-                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis -Dsonar.projectName='cc-practice-apis'"
+                        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis -Dsonar.projectName='cc-practice-apis'"
                     }
                 }
             }
