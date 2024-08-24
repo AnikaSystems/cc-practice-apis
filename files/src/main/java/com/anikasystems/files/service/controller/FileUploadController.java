@@ -22,15 +22,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.anikasystems.files.service.service.S3FileUploadService;
- 
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class FileUploadController {
- 
+
     @Autowired
     private S3FileUploadService s3FileUploadService;
- 
+
     @PostMapping("/file/upload")
     public String uploadFile(@RequestParam("id") long id, @RequestParam("file") MultipartFile file) {
         try {
@@ -42,31 +42,34 @@ public class FileUploadController {
     }
 
     @PutMapping("/file/upload")
-    public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant, @RequestParam("interpreter") String interpreter) {
-        
+    public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant,
+            @RequestParam("interpreter") String interpreter) {
+
         s3FileUploadService.updateFile(id, applicant, interpreter);
-        
+
     }
 
     @PutMapping("/file/download")
-    public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath) throws IOException{
-        
+    public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath)
+            throws IOException {
+
         s3FileUploadService.downloadFile(url, localPath);
-        
+
     }
-    
+
     @SuppressWarnings("null")
     @GetMapping("/file/profile-test")
     public ResponseEntity<String> profileTest(@RequestHeader("Authorization") String bearer) {
         String uriString = UriComponentsBuilder
-            .fromUriString(
-            "https://dev-32541404.okta.com/idp/myaccount/profile")
-            .build().toUriString();
-        
+                .fromUriString(
+                        "https://dev-32541404.okta.com/idp/myaccount/profile")
+                .build().toUriString();
+
         try {
             URL url = new URL(uriString);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            // reuse the okta access token given to us (that should have the myaccount.profile.read scope)
+            // reuse the okta access token given to us (that should have the
+            // myaccount.profile.read scope)
             con.setRequestProperty("Authorization", bearer);
             // IMPORTANT - Accept header is required for okta myaccount apis
             con.setRequestProperty("Accept", "application/json; okta-version=1.0.0");
@@ -80,7 +83,7 @@ public class FileUploadController {
             in.close();
             con.disconnect();
             return new ResponseEntity<>(content.toString(), HttpStatus.OK);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(uriString);
             System.out.println(bearer);
             System.err.println(e.getMessage());
@@ -88,7 +91,7 @@ public class FileUploadController {
         }
     }
 
-    //hit the following URL via postman
+    // hit the following URL via postman
     // HTTP GETcall
     // http://localhost:9091/actuator
     // and you will get all the actuator responses back from the API.
@@ -97,14 +100,13 @@ public class FileUploadController {
     public Health health() {
         int errorCode = check(); // perform some specific health check
         if (errorCode != 0) {
-            return Health.down()
-              .withDetail("Error Code", errorCode).build();
+            return Health.down().withDetail("Error Code", errorCode).build();
         }
         return Health.up().build();
     }
-    
+
     public int check() {
-    	// Our logic to check health
-    	return 0;
+        // Our logic to check health
+        return 0;
     }
 }
