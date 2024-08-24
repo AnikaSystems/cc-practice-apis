@@ -1,4 +1,4 @@
-package com.anikasystems.file.service;
+package com.anikasystems.files.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
