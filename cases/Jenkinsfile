@@ -1,8 +1,5 @@
 pipeline {
     agent { label'ec2-agent' }
-    tools {
-        maven 'maven 3.9.6'
-    }
     options {
         skipStagesAfterUnstable()
     }
@@ -45,8 +42,6 @@ pipeline {
                 script{
                     currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
                     currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
-                    // sh 'mvn -f cases/pom.xml dependency:go-offline'
-                    // sh 'mvn -f cases/pom.xml package'
                     app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
@@ -70,7 +65,6 @@ pipeline {
                         docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
                             sh "mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis-cases -Dsonar.projectName='cc-practice-apis-cases'"
                         }
-                        echo "Run SonarQube Scanner"
                     }
                 }
             }
