@@ -25,7 +25,7 @@ public class S3FileUploadService {
 
     @Value("${aws.s3.bucketName}")
     private String bucketName;
- 
+
     public void uploadFile(long id, String key, MultipartFile file) throws IOException {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file.getInputStream(), null);
         amazonS3.putObject(putObjectRequest);
@@ -41,29 +41,29 @@ public class S3FileUploadService {
 
     public void updateFile(long id, String applicant, String interpreter) {
         Optional<com.anikasystems.files.service.model.File> fileData = filesRepository.findById(id);
-        if (fileData.isPresent()) { 
+        if (fileData.isPresent()) {
             fileData.get().setApplicant(applicant);
             fileData.get().setInterpreter(interpreter);
-            filesRepository.save(id); 
-        }    
-    } 
+            filesRepository.save(id);
+        }
+    }
 
     public void downloadFile(String url, String localPath) throws IOException {
-        
-            URL crunchifyRobotsURL = new URL(localPath);
-            
-            BufferedInputStream crunchifyInputStream = new BufferedInputStream(crunchifyRobotsURL.openStream());
-            FileOutputStream crunchifyOutputStream = new FileOutputStream(localPath);
-            
-            byte[] crunchifySpace = new byte[2048];
-            int crunchifyCounter = 0;
-            
-            while ((crunchifyCounter = crunchifyInputStream.read(crunchifySpace, 0, 1024)) != -1) {
-                crunchifyOutputStream.write(crunchifySpace, 0, crunchifyCounter);
-            }
-            
-            crunchifyOutputStream.close();
-            crunchifyInputStream.close();
-                      
+
+        URL crunchifyRobotsURL = new URL(localPath);
+
+        BufferedInputStream crunchifyInputStream = new BufferedInputStream(crunchifyRobotsURL.openStream());
+        FileOutputStream crunchifyOutputStream = new FileOutputStream(localPath);
+
+        byte[] crunchifySpace = new byte[2048];
+        int crunchifyCounter = 0;
+
+        while ((crunchifyCounter = crunchifyInputStream.read(crunchifySpace, 0, 1024)) != -1) {
+            crunchifyOutputStream.write(crunchifySpace, 0, crunchifyCounter);
+        }
+
+        crunchifyOutputStream.close();
+        crunchifyInputStream.close();
+
     }
 }
