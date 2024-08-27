@@ -55,7 +55,7 @@ pipeline {
         stage('Test'){
             steps {
                 script {
-                    docker.image('maven:3.9.6-amazoncorretto-17') {
+                    docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
                         sh 'mvn -f cases/pom.xml test'
                         junit 'cases/target/surefire-reports/*.xml'
                     }
