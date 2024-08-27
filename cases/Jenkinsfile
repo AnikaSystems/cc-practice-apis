@@ -45,8 +45,8 @@ pipeline {
                 script{
                     currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
                     currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
-                    sh 'mvn -f cases/pom.xml dependency:go-offline'
-                    sh 'mvn -f cases/pom.xml package'
+                    // sh 'mvn -f cases/pom.xml dependency:go-offline'
+                    // sh 'mvn -f cases/pom.xml package'
                     app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
