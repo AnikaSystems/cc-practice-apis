@@ -67,6 +67,9 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv() {
+                        docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
+                            sh "mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis-cases -Dsonar.projectName='cc-practice-apis-cases'"
+                        }
                         echo "Run SonarQube Scanner"
                     }
                 }
