@@ -9,8 +9,8 @@ import com.anikasystems.files.service.model.File;
 
 public interface FilesRepository extends JpaRepository<File, Long> {
     Optional<File> findById(long id);
-    //List<File> findByLastName(String lastName);
+
     List<File> findByPublished(boolean published);
-    //List<File> findByTitleContainingIgnoreUser(String title);
+
     public void save(long id);
 }

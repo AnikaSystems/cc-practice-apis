@@ -33,7 +33,7 @@ public class CaseController {
   @GetMapping("/cases")
   public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) Integer status) {
     try {
-      List<Case> cases = new ArrayList<Case>();
+      List<Case> cases = new ArrayList<>();
 
       if (status == null)
        caseRepository.findAll().forEach(cases::add);
