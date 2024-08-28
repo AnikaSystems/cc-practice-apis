@@ -1,5 +1,6 @@
 package com.anikasystems.casemanagement.service.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,8 +67,9 @@ public class CaseController {
   public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
     try {
       
-
+      Timestamp timestamp = new Timestamp(System.currentTimeMillis());
       Case _case = caseData;
+      _case.setCreatedAt(timestamp.toLocalDateTime());
       Case _caseSave = caseRepository.save(_case);
       return new ResponseEntity<>(_case, HttpStatus.CREATED);
     } catch (Exception e) {
@@ -78,9 +80,11 @@ public class CaseController {
   @PutMapping("/cases/{id}")
   public ResponseEntity<Case> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
     Optional<Case> caseData = caseRepository.findById(id);
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
+      _case.setCreatedAt(timestamp.toLocalDateTime());
   
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
