@@ -93,7 +93,7 @@ public class FileUploadController {
     // http://localhost:9091/actuator
     // and you will get all the actuator responses back from the API.
     // check the health info
-    @PutMapping("/file/actuator/health")
+    @RequestMapping("/users/health")
     public Health health() {
         int errorCode = check(); // perform some specific health check
         if (errorCode != 0) {
