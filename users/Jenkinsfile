@@ -1,14 +1,11 @@
 pipeline {
     agent { label'ec2-agent' }
-    tools {
-        maven 'maven 3.9.6'
-    }
     options {
         skipStagesAfterUnstable()
     }
     stages {
-         stage('Clone repository') { 
-            steps { 
+        stage('Clone repository') {
+            steps {
                 script{
                     def scmVars = checkout scm
                     GIT_COMMIT = scmVars.GIT_COMMIT.substring(0,6)
@@ -43,11 +40,9 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                  currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
-                  currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
-                  sh 'mvn -f users/pom.xml dependency:go-offline'
-                  sh 'mvn -f users/pom.xml package'
-                  app = docker.build("cc-users:${env.BUILD_NUMBER}", "-f users/Dockerfile .")
+                    currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
+                    currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
+                    app = docker.build("cc-users:${env.BUILD_NUMBER}", "-f users/Dockerfile .")
                 }
             }
         }
@@ -55,8 +50,10 @@ pipeline {
         stage('Test'){
             steps {
                 script {
-                    sh 'mvn -f users/pom.xml test'
-                    junit 'users/target/surefire-reports/*.xml'
+                    docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
+                        sh 'mvn -f users/pom.xml test'
+                        junit 'users/target/surefire-reports/*.xml'
+                    }
                 }
             }
         }
@@ -65,7 +62,22 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv() {
-                        echo "Run SonarQube Scanner"
+                        docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
+                            sh "mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis-users -Dsonar.projectName='cc-practice-apis-users'"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                script{
+                timeout(time:5, unit:"MINUTES"){
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK'){
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
                     }
                 }
             }
@@ -94,7 +106,19 @@ pipeline {
             }
         }
 
-        stage('archiving artifacts into AWS s3') {
+        stage('Trivy Secret Scan') {
+            steps {
+                script {
+                    echo "Run Trivy GitHub Repo Scanner"
+                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
+                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
+                    }
+                }
+            }
+        }
+
+        stage('Archive scan results into AWS s3') {
             steps {
                 script {
                     def s3path = "cc-practice-apis/user/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
@@ -108,18 +132,6 @@ pipeline {
                 }
                 
                 
-            }
-        }
-
-        stage('Trivy Secret Scan') {
-            steps {
-                script {
-                    echo "Run Trivy GitHub Repo Scanner"
-                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
-                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
-                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
-                    }
-                }
             }
         }
 
@@ -172,5 +184,6 @@ pipeline {
                 }
             }
         }  
+
     }
 }
