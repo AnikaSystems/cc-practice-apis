@@ -93,7 +93,19 @@ pipeline {
             }
         }
 
-        stage('archiving artifacts into AWS s3') {
+        stage('Trivy Secret Scan') {
+            steps {
+                script {
+                    echo "Run Trivy GitHub Repo Scanner"
+                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
+                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
+                    }
+                }
+            }
+        }
+
+        stage('Archive scan results into AWS s3') {
             steps {
                 script {
                     def s3path = "cc-practice-apis/case/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
@@ -107,18 +119,6 @@ pipeline {
                 }
                 
                 
-            }
-        }
-
-        stage('Trivy Secret Scan') {
-            steps {
-                script {
-                    echo "Run Trivy GitHub Repo Scanner"
-                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
-                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
-                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
-                    }
-                }
             }
         }
 
