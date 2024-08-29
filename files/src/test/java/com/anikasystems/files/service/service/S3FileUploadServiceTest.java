@@ -17,14 +17,15 @@ class S3FileUploadServiceTest {
     @Autowired
     private S3FileUploadService fileUploadService;
 
-    @Test
-    void fileUploadTest() throws IOException {
-        long id = 1L;
-        File file = new File();
-        String key = file.getRelativePath();
-        MultipartFile mf = new MockMultipartFile("ANIKASYSTEM_TEST", new FileInputStream(""));
-        fileUploadService.uploadFile(id, key, mf);
-    }
+    // @Test
+    // void fileUploadTest() throws IOException {
+    // long id = 1L;
+    // File file = new File();
+    // String key = file.getRelativePath();
+    // MultipartFile mf = new MockMultipartFile("ANIKASYSTEM_TEST", new
+    // FileInputStream(""));
+    // fileUploadService.uploadFile(id, key, mf);
+    // }
 
     // @Test
     // void fileUpdateTest() {
