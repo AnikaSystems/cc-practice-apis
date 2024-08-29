@@ -45,7 +45,7 @@ public class FileUploadController {
     public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant,
             @RequestParam("interpreter") String interpreter) {
 
-        s3FileUploadService.updateFile(id, applicant, interpreter);
+        s3FileUploadService.updateFile();
 
     }
 
@@ -96,7 +96,7 @@ public class FileUploadController {
     // http://localhost:9091/actuator
     // and you will get all the actuator responses back from the API.
     // check the health info
-    @PutMapping("/file/actuator/health")
+    @PutMapping("/users/health")
     public Health health() {
         int errorCode = check(); // perform some specific health check
         if (errorCode != 0) {

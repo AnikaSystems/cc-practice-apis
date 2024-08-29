@@ -17,10 +17,10 @@ public class AmazonS3Config {
     private String secretKey;
 
     @Value("${aws.s3.region}")
-    private String region;
+    private static String region;
 
     @Bean
-    public AmazonS3 amazonS3() {
+    public static AmazonS3 amazonS3() {
         // BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey,
         // secretKey);
         return AmazonS3Client.builder()

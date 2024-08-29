@@ -1,5 +1,6 @@
 package com.anikasystems.files.service.service;
 
+import com.anikasystems.files.service.config.AmazonS3Config;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.anikasystems.files.service.repository.FilesRepository;
@@ -19,8 +20,6 @@ import java.util.Optional;
 public class S3FileUploadService {
 
     @Autowired
-    private AmazonS3 amazonS3;
-    @Autowired
     FilesRepository filesRepository;
 
     @Value("${aws.s3.bucketName}")
@@ -28,18 +27,23 @@ public class S3FileUploadService {
 
     public void uploadFile(long id, String key, MultipartFile file) throws IOException {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file.getInputStream(), null);
+        AmazonS3 amazonS3 = AmazonS3Config.amazonS3();
         amazonS3.putObject(putObjectRequest);
-        saveToDb(id);
+        saveToDb();
     }
 
-    public void saveToDb(long id) {
+    public void saveToDb() {
+        long id = 1L;
         Optional<com.anikasystems.files.service.model.File> fileData = filesRepository.findById(id);
         if (fileData.isPresent()) {
             filesRepository.save(id);
         }
     }
 
-    public void updateFile(long id, String applicant, String interpreter) {
+    public void updateFile() {
+        long id = 1L;
+        String applicant = "X";
+        String interpreter = "X";
         Optional<com.anikasystems.files.service.model.File> fileData = filesRepository.findById(id);
         if (fileData.isPresent()) {
             fileData.get().setApplicant(applicant);
