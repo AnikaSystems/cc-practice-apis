@@ -138,8 +138,8 @@ pipeline {
         stage('Helm Verify') {
             steps {
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
                 }
             }
         }  
@@ -150,8 +150,8 @@ pipeline {
                     input 'Deploy to DEV?'
                 }                
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app cases"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
@@ -162,8 +162,8 @@ pipeline {
                     input 'Deploy to TEST?'
                 }                
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm fullstatus -n app cases"
+                    sh "KUBECONFIG=~/.kube/test-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/test-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
@@ -179,8 +179,8 @@ pipeline {
                     input 'Deploy to PROD?'
                 }
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm fullstatus -n app cases"
+                    sh "KUBECONFIG=~/.kube/prod-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/prod-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
