@@ -84,7 +84,7 @@ public class CaseController {
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
-      _case.setUpdateDate(timestamp.toLocalDateTime());
+      _case.setUpdatedAt(timestamp.toLocalDateTime());
   
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
