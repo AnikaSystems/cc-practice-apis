@@ -152,6 +152,9 @@ public class Case {
     @Column(name = "case_update_date")
     private LocalDateTime caseUpdateDate;
 
+    @Column(name = "case_created_date")
+    private LocalDateTime createdAt;
+
     public Case() {
 
     }
@@ -171,7 +174,7 @@ public class Case {
             String officerWdSig, String officerWdSigDocPath, String officerWdSigDocFileId,
             String officerWdEnteredName, String subjectWdSig, String subjectWdSigDocPath,
             String subjectWdSigDocFileId, String subjectWdEnteredName, Integer caseStatusCode,
-            String caseStatusValue, LocalDateTime caseUpdateDate) {
+            String caseStatusValue, LocalDateTime caseUpdateDate, LocalDateTime createdAt) {
         this.caseId = caseId;
         this.userIdFk = userIdFk;
         this.cmIdFk = cmIdFk;
@@ -217,6 +220,7 @@ public class Case {
         this.caseStatusCode = caseStatusCode;
         this.caseStatusValue = caseStatusValue;
         this.caseUpdateDate = caseUpdateDate;
+        this.createdAt = createdAt;
     }
 
     public Integer getCaseId() {
@@ -574,9 +578,19 @@ public class Case {
     public LocalDateTime getCaseUpdateDate() {
         return caseUpdateDate;
     }
+    
 
     public void setCaseUpdateDate(LocalDateTime caseUpdateDate) {
         this.caseUpdateDate = caseUpdateDate;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -627,6 +641,7 @@ public class Case {
                 ", caseStatusCode=" + caseStatusCode +
                 ", caseStatusValue=" + caseStatusValue +
                 ", caseUpdateDate=" + caseUpdateDate +
+                ", createdAt=" + createdAt +
                 "]";
     }
 
