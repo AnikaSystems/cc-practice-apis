@@ -57,7 +57,7 @@ public class CaseController {
     List<Case> caseData = caseRepository.findByCaseId(id);
 
     if (caseData!=null) {
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(caseData.get(0), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
