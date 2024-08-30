@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://davguylytwn4k.cloudfront.net")
 @RestController
 @RequestMapping("/api")
 public class CaseController {
