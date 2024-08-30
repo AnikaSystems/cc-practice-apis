@@ -57,7 +57,7 @@ public class CaseController {
     List<Case> caseData = caseRepository.findByCaseId(id);
 
     if (caseData!=null) {
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(caseData.get(0), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -84,7 +84,7 @@ public class CaseController {
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
-      _case.setUpdateDate(timestamp.toLocalDateTime());
+      _case.setUpdatedAt(timestamp.toLocalDateTime());
   
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
