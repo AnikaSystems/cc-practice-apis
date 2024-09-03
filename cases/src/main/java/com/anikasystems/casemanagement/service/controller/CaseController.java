@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +30,9 @@ public class CaseController {
 
   @Autowired
   CaseRepository caseRepository;
+
+  @Value("${app.version}")
+  private String appVersion;
 
   @GetMapping("/cases")
   public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) Integer status) {
@@ -117,6 +121,12 @@ public class CaseController {
   @GetMapping("/cases/uppercase/{title}")
   public ResponseEntity<String> uppercaseString(@PathVariable("title") String string) {
     return new ResponseEntity<>(string.toUpperCase(), HttpStatus.OK);
+  }
+
+  //This is the API to return the version of the service
+  @GetMapping("/cases/version")
+  public ResponseEntity<String> getVersion() {
+    return new ResponseEntity<>(appVersion, HttpStatus.OK);
   }
 
 }
