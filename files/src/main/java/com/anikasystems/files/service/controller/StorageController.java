@@ -8,10 +8,13 @@ import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,31 +24,36 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.anikasystems.files.service.service.S3FileUploadService;
+import com.anikasystems.files.service.service.StorageService;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
-public class FileUploadController {
+public class StorageController {
 
     @Autowired
-    private S3FileUploadService s3FileUploadService;
+    private StorageService storageService;
 
     @PostMapping("/file/upload")
     public String uploadFile(@RequestParam("id") long id, @RequestParam("file") MultipartFile file) {
         try {
-            s3FileUploadService.uploadFile(id, file.getOriginalFilename(), file);
+            storageService.uploadFile(id, file.getOriginalFilename(), file);
             return "File uploaded successfully!";
         } catch (IOException e) {
             return "Error uploading file: " + e.getMessage();
         }
     }
 
+    @PostMapping("/file/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseEntity<>(storageService.uploadFile(file), HttpStatus.OK);
+    }
+
     @PutMapping("/file/upload")
     public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant,
             @RequestParam("interpreter") String interpreter) {
 
-        s3FileUploadService.updateFile();
+        storageService.updateFile();
 
     }
 
@@ -53,8 +61,25 @@ public class FileUploadController {
     public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath)
             throws IOException {
 
-        s3FileUploadService.downloadFile(url, localPath);
+        storageService.downloadFile(url, localPath);
 
+    }
+
+    @GetMapping("/file/download")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
+        byte[] data = storageService.downloadFile(fileName);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment; fileName=\"" + fileName + "\"")
+                .body(resource);
+    }
+
+    @DeleteMapping("/delete/{fileName}")
+    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
+        return new ResponseEntity<>(storageService.deleteFile(fileName), HttpStatus.OK);
     }
 
     @SuppressWarnings("null")
@@ -109,4 +134,5 @@ public class FileUploadController {
         // Our logic to check health
         return 0;
     }
+
 }
