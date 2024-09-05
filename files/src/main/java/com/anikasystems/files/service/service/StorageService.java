@@ -34,13 +34,6 @@ public class StorageService {
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    public void uploadFile(long id, String key, MultipartFile file) throws IOException {
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file.getInputStream(), null);
-        AmazonS3 amazonS3 = AmazonS3Config.S3Client();
-        amazonS3.putObject(putObjectRequest);
-        saveToDb();
-    }
-
     public String uploadFile(MultipartFile file) throws IOException {
         File fobj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
@@ -78,25 +71,6 @@ public class StorageService {
             fileData.get().setInterpreter(interpreter);
             filesRepository.save(id);
         }
-    }
-
-    public void downloadFile(String url, String localPath) throws IOException {
-
-        URL crunchifyRobotsURL = new URL(localPath);
-
-        BufferedInputStream crunchifyInputStream = new BufferedInputStream(crunchifyRobotsURL.openStream());
-        FileOutputStream crunchifyOutputStream = new FileOutputStream(localPath);
-
-        byte[] crunchifySpace = new byte[2048];
-        int crunchifyCounter = 0;
-
-        while ((crunchifyCounter = crunchifyInputStream.read(crunchifySpace, 0, 1024)) != -1) {
-            crunchifyOutputStream.write(crunchifySpace, 0, crunchifyCounter);
-        }
-
-        crunchifyOutputStream.close();
-        crunchifyInputStream.close();
-
     }
 
     public byte[] downloadFile(String fileName) {

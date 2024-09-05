@@ -25,7 +25,8 @@ public class File {
   @Column(name = "interpreter")
   private String interpreter;
 
-  public File() {}
+  public File() {
+  }
 
   public File(String title, String description, boolean published, String applicant, String interpreter) {
     this.title = title;

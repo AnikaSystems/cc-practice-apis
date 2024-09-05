@@ -35,16 +35,6 @@ public class StorageController {
     private StorageService storageService;
 
     @PostMapping("/file/upload")
-    public String uploadFile(@RequestParam("id") long id, @RequestParam("file") MultipartFile file) {
-        try {
-            storageService.uploadFile(id, file.getOriginalFilename(), file);
-            return "File uploaded successfully!";
-        } catch (IOException e) {
-            return "Error uploading file: " + e.getMessage();
-        }
-    }
-
-    @PostMapping("/file/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         return new ResponseEntity<>(storageService.uploadFile(file), HttpStatus.OK);
     }
@@ -54,14 +44,6 @@ public class StorageController {
             @RequestParam("interpreter") String interpreter) {
 
         storageService.updateFile();
-
-    }
-
-    @PutMapping("/file/download")
-    public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath)
-            throws IOException {
-
-        storageService.downloadFile(url, localPath);
 
     }
 

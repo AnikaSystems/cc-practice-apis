@@ -1,12 +1,11 @@
-cloud:
-  aws:
-    credentials:
-      access-key: ASIA3FLDYPKU7G5NT265
-      secret-key: lid2hiLrKqmf0TgsZogib98XAVUQyUq4n5w+eXJY
-    region:
-      static: us-east-1
-    stack:
-      auto: false
+aws:
+  credentials:
+    access-key: ASIA3FLDYPKU7G5NT265
+    secret-key: lid2hiLrKqmf0TgsZogib98XAVUQyUq4n5w+eXJY
+  region:
+    static: us-east-1
+  stack:
+    auto: false
 
 application:
   bucket:
