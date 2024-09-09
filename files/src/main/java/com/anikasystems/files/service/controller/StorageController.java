@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.core.io.ByteArrayResource;
@@ -26,10 +28,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.anikasystems.files.service.service.StorageService;
 
-@RestController
+
 @CrossOrigin(origins = "*")
+@RestController
 @RequestMapping("/api")
 public class StorageController {
+	private static final Logger logger = LoggerFactory.getLogger(StorageController.class);
+	
 
     @Autowired
     private StorageService storageService;
@@ -40,33 +45,16 @@ public class StorageController {
             storageService.uploadFile(id, file.getOriginalFilename(), file);
             return "File uploaded successfully!";
         } catch (IOException e) {
+        	logger.error("Error uploading "+id,e);
             return "Error uploading file: " + e.getMessage();
         }
     }
 
-    @PostMapping("/file/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return new ResponseEntity<>(storageService.uploadFile(file), HttpStatus.OK);
-    }
+  
 
-    @PutMapping("/file/upload")
-    public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant,
-            @RequestParam("interpreter") String interpreter) {
-
-        storageService.updateFile();
-
-    }
-
-    @PutMapping("/file/download")
-    public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath)
-            throws IOException {
-
-        storageService.downloadFile(url, localPath);
-
-    }
-
-    @GetMapping("/file/download")
+    @GetMapping("/file/download/{fileName}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
+    	logger.info("request received for file download : "+fileName);
         byte[] data = storageService.downloadFile(fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity
@@ -82,7 +70,7 @@ public class StorageController {
         return new ResponseEntity<>(storageService.deleteFile(fileName), HttpStatus.OK);
     }
 
-    @SuppressWarnings("null")
+  
     @GetMapping("/file/profile-test")
     public ResponseEntity<String> profileTest(@RequestHeader("Authorization") String bearer) {
         String uriString = UriComponentsBuilder
@@ -133,6 +121,11 @@ public class StorageController {
     public int check() {
         // Our logic to check health
         return 0;
+    }
+    
+    @RequestMapping("/")
+    public String home(){
+        return "Files Microservice!";
     }
 
 }

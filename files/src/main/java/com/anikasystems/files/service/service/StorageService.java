@@ -1,19 +1,5 @@
 package com.anikasystems.files.service.service;
 
-import com.anikasystems.files.service.config.AmazonS3Config;
-import com.amazonaws.services.lookoutequipment.model.S3Object;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.util.IOUtils;
-import com.anikasystems.files.service.repository.FilesRepository;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,24 +7,39 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
+import com.anikasystems.files.service.repository.FilesRepository;
 @Service
 @Slf4j
 public class StorageService {
 
+	private static final Logger logger = LoggerFactory.getLogger(StorageService.class);
+	
     @Autowired
     FilesRepository filesRepository;
 
     @Autowired
     AmazonS3 s3Client;
 
-    @Value("${application.bucket.name}")
+    @Value("${application.s3.bucket}")
     private String bucketName;
 
-    public void uploadFile(long id, String key, MultipartFile file) throws IOException {
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file.getInputStream(), null);
-        AmazonS3 amazonS3 = AmazonS3Config.S3Client();
-        amazonS3.putObject(putObjectRequest);
-        saveToDb();
+    public void uploadFile(long id, String key, MultipartFile file) throws IOException {         
+    	logger.info("Received request to upload : "+id+" key="+key+" file:"+file.getName()+" bucketName="+bucketName);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file.getInputStream(), null);      
+        s3Client.putObject(putObjectRequest);
+        saveToDb(id);
+        logger.info("DONE save and upload : "+id+" key="+key+" file:"+file.getName()+" bucketName="+bucketName);
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
@@ -55,16 +56,18 @@ public class StorageService {
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
             fos.write(mf.getBytes());
         } catch (IOException ioe) {
-            // Log.debug("Error converting MultipartFile to File...", ioe);
+             logger.debug("Error converting MultipartFile to File...", ioe);
         }
         return convertedFile;
     }
 
-    public void saveToDb() {
-        long id = 1L;
+    public void saveToDb(Long id) {
+        
         Optional<com.anikasystems.files.service.model.File> fileData = filesRepository.findById(id);
         if (fileData.isPresent()) {
             filesRepository.save(id);
+        }else {        
+        	logger.error(id+" not found");
         }
     }
 
