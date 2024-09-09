@@ -34,6 +34,7 @@ public class StorageService {
     @Value("${application.s3.bucket}")
     private String bucketName;
 
+
     public void uploadFile(long id, String key, MultipartFile file) throws IOException {         
     	logger.info("Received request to upload : "+id+" key="+key+" file:"+file.getName()+" bucketName="+bucketName);
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, file.getInputStream(), null);      
@@ -42,14 +43,7 @@ public class StorageService {
         logger.info("DONE save and upload : "+id+" key="+key+" file:"+file.getName()+" bucketName="+bucketName);
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
-        File fobj = convertMultiPartFileToFile(file);
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fobj));
-        fobj.delete();
-        return "File uploaded: " + fileName;
-        // saveToDb();
-    }
+
 
     private File convertMultiPartFileToFile(MultipartFile mf) {
         File convertedFile = new File(mf.getOriginalFilename());
@@ -81,25 +75,6 @@ public class StorageService {
             fileData.get().setInterpreter(interpreter);
             filesRepository.save(id);
         }
-    }
-
-    public void downloadFile(String url, String localPath) throws IOException {
-
-        URL crunchifyRobotsURL = new URL(localPath);
-
-        BufferedInputStream crunchifyInputStream = new BufferedInputStream(crunchifyRobotsURL.openStream());
-        FileOutputStream crunchifyOutputStream = new FileOutputStream(localPath);
-
-        byte[] crunchifySpace = new byte[2048];
-        int crunchifyCounter = 0;
-
-        while ((crunchifyCounter = crunchifyInputStream.read(crunchifySpace, 0, 1024)) != -1) {
-            crunchifyOutputStream.write(crunchifySpace, 0, crunchifyCounter);
-        }
-
-        crunchifyOutputStream.close();
-        crunchifyInputStream.close();
-
     }
 
     public byte[] downloadFile(String fileName) {
