@@ -150,7 +150,10 @@ public class Case {
     private String caseStatusValue;
 
     @Column(name = "case_update_date")
-    private LocalDateTime caseUpdateDate;
+    private LocalDateTime updatedAt;
+
+    @Column(name = "case_created_date")
+    private LocalDateTime createdAt;
 
     public Case() {
 
@@ -171,7 +174,7 @@ public class Case {
             String officerWdSig, String officerWdSigDocPath, String officerWdSigDocFileId,
             String officerWdEnteredName, String subjectWdSig, String subjectWdSigDocPath,
             String subjectWdSigDocFileId, String subjectWdEnteredName, Integer caseStatusCode,
-            String caseStatusValue, LocalDateTime caseUpdateDate) {
+            String caseStatusValue, LocalDateTime updatedAt, LocalDateTime createdAt) {
         this.caseId = caseId;
         this.userIdFk = userIdFk;
         this.cmIdFk = cmIdFk;
@@ -216,7 +219,8 @@ public class Case {
         this.subjectWdEnteredName = subjectWdEnteredName;
         this.caseStatusCode = caseStatusCode;
         this.caseStatusValue = caseStatusValue;
-        this.caseUpdateDate = caseUpdateDate;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 
     public Integer getCaseId() {
@@ -571,12 +575,22 @@ public class Case {
         this.caseStatusValue = caseStatusValue;
     }
 
-    public LocalDateTime getCaseUpdateDate() {
-        return caseUpdateDate;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public void setCaseUpdateDate(LocalDateTime caseUpdateDate) {
-        this.caseUpdateDate = caseUpdateDate;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -626,7 +640,8 @@ public class Case {
                 ", subjectWdEnteredName=" + subjectWdEnteredName +
                 ", caseStatusCode=" + caseStatusCode +
                 ", caseStatusValue=" + caseStatusValue +
-                ", caseUpdateDate=" + caseUpdateDate +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
                 "]";
     }
 

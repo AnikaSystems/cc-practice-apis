@@ -1,8 +1,5 @@
 pipeline {
     agent { label'ec2-agent' }
-    tools {
-        maven 'maven 3.9.6'
-    }
     options {
         skipStagesAfterUnstable()
     }
@@ -45,8 +42,6 @@ pipeline {
                 script{
                     currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
                     currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
-                    sh 'mvn -f cases/pom.xml dependency:go-offline'
-                    sh 'mvn -f cases/pom.xml package'
                     app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
@@ -55,8 +50,10 @@ pipeline {
         stage('Test'){
             steps {
                 script {
-                    sh 'mvn -f cases/pom.xml test'
-                    junit 'cases/target/surefire-reports/*.xml'
+                    docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
+                        sh 'mvn -f cases/pom.xml test'
+                        junit 'cases/target/surefire-reports/*.xml'
+                    }
                 }
             }
         }
@@ -65,7 +62,9 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv() {
-                        echo "Run SonarQube Scanner"
+                        docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
+                            sh "mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis-cases -Dsonar.projectName='cc-practice-apis-cases'"
+                        }
                     }
                 }
             }
@@ -94,7 +93,19 @@ pipeline {
             }
         }
 
-        stage('archiving artifacts into AWS s3') {
+        stage('Trivy Secret Scan') {
+            steps {
+                script {
+                    echo "Run Trivy GitHub Repo Scanner"
+                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
+                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
+                    }
+                }
+            }
+        }
+
+        stage('Archive scan results into AWS s3') {
             steps {
                 script {
                     def s3path = "cc-practice-apis/case/${GIT_BRANCH_SHORT}/${env.BUILD_NUMBER}/"
@@ -111,23 +122,11 @@ pipeline {
             }
         }
 
-        stage('Trivy Secret Scan') {
-            steps {
-                script {
-                    echo "Run Trivy GitHub Repo Scanner"
-                    echo "Scanning on branch: ${GIT_BRANCH_LONG}"
-                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
-                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
-                    }
-                }
-            }
-        }
-
         stage('Helm Verify') {
             steps {
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
                 }
             }
         }  
@@ -138,8 +137,8 @@ pipeline {
                     input 'Deploy to DEV?'
                 }                
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-dev-eks.config helm fullstatus -n app cases"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
@@ -150,8 +149,8 @@ pipeline {
                     input 'Deploy to TEST?'
                 }                
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-test-eks.config helm fullstatus -n app cases"
+                    sh "KUBECONFIG=~/.kube/test-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/test-eks.config helm fullstatus -n app cases"
                 }
             }
         }  
@@ -167,8 +166,8 @@ pipeline {
                     input 'Deploy to PROD?'
                 }
                 script {
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
-                    sh "KUBECONFIG=~/.kube/singlevpc-deploy-prod-eks.config helm fullstatus -n app cases"
+                    sh "KUBECONFIG=~/.kube/prod-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT} --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/prod-eks.config helm fullstatus -n app cases"
                 }
             }
         }  

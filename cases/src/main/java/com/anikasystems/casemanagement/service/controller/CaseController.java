@@ -1,13 +1,14 @@
 package com.anikasystems.casemanagement.service.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anikasystems.casemanagement.service.model.Case;
 import com.anikasystems.casemanagement.service.repository.CaseRepository;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class CaseController {
@@ -29,10 +29,13 @@ public class CaseController {
   @Autowired
   CaseRepository caseRepository;
 
+  @Value("${app.version}")
+  private String appVersion;
+
   @GetMapping("/cases")
   public ResponseEntity<List<Case>> getAllCases(@RequestParam(required = false) Integer status) {
     try {
-      List<Case> cases = new ArrayList<Case>();
+      List<Case> cases = new ArrayList<>();
 
       if (status == null)
        caseRepository.findAll().forEach(cases::add);
@@ -56,7 +59,7 @@ public class CaseController {
     List<Case> caseData = caseRepository.findByCaseId(id);
 
     if (caseData!=null) {
-      return new ResponseEntity<>(HttpStatus.OK);
+      return new ResponseEntity<>(caseData.get(0), HttpStatus.OK);
     } else {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -66,8 +69,9 @@ public class CaseController {
   public ResponseEntity<Case> createCase(@RequestBody Case caseData) {
     try {
       
-
+      Timestamp timestamp = new Timestamp(System.currentTimeMillis());
       Case _case = caseData;
+      _case.setCreatedAt(timestamp.toLocalDateTime());
       Case _caseSave = caseRepository.save(_case);
       return new ResponseEntity<>(_case, HttpStatus.CREATED);
     } catch (Exception e) {
@@ -78,9 +82,11 @@ public class CaseController {
   @PutMapping("/cases/{id}")
   public ResponseEntity<Case> updateCase(@PathVariable("id") long id, @RequestBody Case inputCase) {
     Optional<Case> caseData = caseRepository.findById(id);
+    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
     if (caseData.isPresent()) {
       Case _case = caseData.get();
+      _case.setUpdatedAt(timestamp.toLocalDateTime());
   
       return new ResponseEntity<>(caseRepository.save(_case), HttpStatus.OK);
     } else {
@@ -113,6 +119,12 @@ public class CaseController {
   @GetMapping("/cases/uppercase/{title}")
   public ResponseEntity<String> uppercaseString(@PathVariable("title") String string) {
     return new ResponseEntity<>(string.toUpperCase(), HttpStatus.OK);
+  }
+
+  //This is the API to return the version of the service
+  @GetMapping("/cases/version")
+  public ResponseEntity<String> getVersion() {
+    return new ResponseEntity<>(appVersion, HttpStatus.OK);
   }
 
 }
