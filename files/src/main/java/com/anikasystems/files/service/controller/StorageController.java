@@ -6,12 +6,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,43 +26,51 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.anikasystems.files.service.service.S3FileUploadService;
+import com.anikasystems.files.service.service.StorageService;
 
-@RestController
+
 @CrossOrigin(origins = "*")
+@RestController
 @RequestMapping("/api")
-public class FileUploadController {
+public class StorageController {
+	private static final Logger logger = LoggerFactory.getLogger(StorageController.class);
+	
 
     @Autowired
-    private S3FileUploadService s3FileUploadService;
+    private StorageService storageService;
 
     @PostMapping("/file/upload")
     public String uploadFile(@RequestParam("id") long id, @RequestParam("file") MultipartFile file) {
         try {
-            s3FileUploadService.uploadFile(id, file.getOriginalFilename(), file);
+            storageService.uploadFile(id, file.getOriginalFilename(), file);
             return "File uploaded successfully!";
         } catch (IOException e) {
+        	logger.error("Error uploading "+id,e);
             return "Error uploading file: " + e.getMessage();
         }
     }
 
-    @PutMapping("/file/upload")
-    public void saveFile(@RequestParam("id") long id, @RequestParam("applicant") String applicant,
-            @RequestParam("interpreter") String interpreter) {
+  
 
-        s3FileUploadService.updateFile();
-
+    @GetMapping("/file/download/{fileName}")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
+    	logger.info("request received for file download : "+fileName);
+        byte[] data = storageService.downloadFile(fileName);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment; fileName=\"" + fileName + "\"")
+                .body(resource);
     }
 
-    @PutMapping("/file/download")
-    public void downloadFile(@RequestParam("url") String url, @RequestParam("localPath") String localPath)
-            throws IOException {
-
-        s3FileUploadService.downloadFile(url, localPath);
-
+    @DeleteMapping("/delete/{fileName}")
+    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
+        return new ResponseEntity<>(storageService.deleteFile(fileName), HttpStatus.OK);
     }
 
-    @SuppressWarnings("null")
+  
     @GetMapping("/file/profile-test")
     public ResponseEntity<String> profileTest(@RequestHeader("Authorization") String bearer) {
         String uriString = UriComponentsBuilder
@@ -96,7 +109,7 @@ public class FileUploadController {
     // http://localhost:9091/actuator
     // and you will get all the actuator responses back from the API.
     // check the health info
-    @RequestMapping("/file/health")
+    @PutMapping("/users/health")
     public Health health() {
         int errorCode = check(); // perform some specific health check
         if (errorCode != 0) {
@@ -109,4 +122,10 @@ public class FileUploadController {
         // Our logic to check health
         return 0;
     }
+    
+    @RequestMapping("/")
+    public String home(){
+        return "Files Microservice!";
+    }
+
 }

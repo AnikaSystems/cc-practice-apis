@@ -14,8 +14,8 @@ import com.amazonaws.services.codecommit.model.File;
 @SpringBootTest
 class S3FileUploadServiceTest {
 
-    @Autowired
-    private S3FileUploadService fileUploadService;
+    // @Autowired
+    // private StorageService fileUploadService;
 
     // @Test
     // void fileUploadTest() throws IOException {

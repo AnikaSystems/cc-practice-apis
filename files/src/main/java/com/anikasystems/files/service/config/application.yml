@@ -1,0 +1,13 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: ASIA3FLDYPKUTLTNV7WI
+      secretKey: t5Bs/jj5jT7+Rvih2e54j8M1UwhHaDsIeWUL5mp5
+    region: us-east-1
+    stack: false
+application:
+  bucket:
+    name:
+spring: <1 key>
+server:
+  port: 8080
