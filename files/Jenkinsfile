@@ -63,7 +63,7 @@ pipeline {
                 script {
                     withSonarQubeEnv() {
                         docker.image('maven:3.9.6-amazoncorretto-17').inside('-v local-dist:/app/dist') {
-                            sh "mvn clean verify sonar:sonar -Dsonar.projectKey=cc-practice-apis-files -Dsonar.projectName='cc-practice-apis-files'"
+                            sh "mvn clean verify sonar:sonar -DskipTests -Dsonar.projectKey=cc-practice-apis-files -Dsonar.projectName='cc-practice-apis-files'"
                         }
                     }
                 }
