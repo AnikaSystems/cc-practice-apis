@@ -2,6 +2,7 @@ pipeline {
     agent { label'ec2-agent' }
     options {
         skipStagesAfterUnstable()
+        
     }
     stages {
         stage('Clone repository') {
