@@ -139,7 +139,7 @@ pipeline {
         stage('Helm Verify') {
             steps {
                 script {
-                    sh "KUBECONFIG=~/.kube/dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID}"
+                    sh "KUBECONFIG=~/.kube/dev-eks.config helm template cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --set image.repository=${env.ECR_FQDN}/cc-cases"
                     sh "KUBECONFIG=~/.kube/dev-eks.config helm upgrade --install -n app cases cases/chart/cases --set rev=${GIT_COMMIT}  --set image.tag=${GIT_HYBRID} --dry-run=server"
                 }
             }
