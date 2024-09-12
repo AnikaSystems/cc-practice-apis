@@ -33,6 +33,9 @@ pipeline {
                     echo "GIT_BRANCH_LONG: ${GIT_BRANCH_LONG}"
                     echo "GIT_BRANCH_SHORT: ${GIT_BRANCH_SHORT}"
                     echo "GIT_HYBRID: ${GIT_HYBRID}"
+
+                    currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
+                    currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
                 }
             }
         }
@@ -40,8 +43,6 @@ pipeline {
         stage('Build') { 
             steps { 
                 script{
-                    currentBuild.displayName = "${env.BUILD_NUMBER}"+"-"+"${GIT_COMMIT}"+"-"+"${GIT_BRANCH_SHORT}"
-                    currentBuild.description = "Updated by "+ GIT_AUTHOR_COMMITTER + " : " + GIT_COMMIT_MSG
                     app = docker.build("cc-cases:${env.BUILD_NUMBER}", "-f cases/Dockerfile .")
                 }
             }
@@ -70,15 +71,14 @@ pipeline {
             }
         }
 
-        stage('Push to ECR') {
+        stage('Quality Gate') {
             steps {
                 script{
-                    docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push ("${GIT_BRANCH_SHORT}")
-                        app.push("${GIT_COMMIT}")
-                        app.push("${GIT_HYBRID}")
-                        app.push("latest")
+                    timeout(time:30, unit:"SECONDS"){
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK'){
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
                     }
                 }
             }
@@ -88,7 +88,7 @@ pipeline {
             steps {
                 script {
                     echo "Run Trivy Image Scanner"
-                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output aquasec/trivy image -f json -o /output/cc-cases-image-scan.json cc-cases:${env.BUILD_NUMBER}"
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output aquasec/trivy image -f json -o /output/image-scan.json cc-cases:${env.BUILD_NUMBER}"
                 }
             }
         }
@@ -99,7 +99,7 @@ pipeline {
                     echo "Run Trivy GitHub Repo Scanner"
                     echo "Scanning on branch: ${GIT_BRANCH_LONG}"
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'GITHUB_PAT', usernameVariable: 'DUMMY_USER')]) {
-                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret"
+                        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /scan-results:/output -e GITHUB_TOKEN=${GITHUB_PAT} aquasec/trivy repo github.com/AnikaSystems/cc-practice-apis --branch ${GIT_BRANCH_LONG} --scanners secret --format json --output /output/secret-scan.json"
                     }
                 }
             }
@@ -113,12 +113,26 @@ pipeline {
 
                     withAWS(region:env.DEPLOY_REGION,credentials:"aws-rapid-jenkins-user") {
                         s3Delete(bucket:env.PIPELINE_BUCKET_NAME, path:s3path)
-                        s3Upload(bucket:env.PIPELINE_BUCKET_NAME, workingDir:'/scan-results/', path:s3path, includePathPattern:'**/*');
+                        s3Upload(bucket:env.PIPELINE_BUCKET_NAME, workingDir:'/scan-results/', path:s3path, includePathPattern:'secret-scan.json,image-scan.json');
                     }
                     
                 }
                 
                 
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                script{
+                    docker.withRegistry("https://${env.ECR_FQDN}", "ecr:${env.DEPLOY_REGION}:aws-rapid-jenkins-user") {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push ("${GIT_BRANCH_SHORT}")
+                        app.push("${GIT_COMMIT}")
+                        app.push("${GIT_HYBRID}")
+                        app.push("latest")
+                    }
+                }
             }
         }
 
