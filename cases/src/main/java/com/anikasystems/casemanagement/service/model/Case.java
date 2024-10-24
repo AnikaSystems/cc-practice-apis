@@ -17,6 +17,7 @@ public class Case {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 
+    // remove from template
     @Column(name = "case_id")
     private Integer caseId;
 
